@@ -1,7 +1,54 @@
-# End-WikiPlus
+# Endfield Wikiplus
 
+![Version](https://img.shields.io/badge/version-0.1.0--alpha-blue?style=for-the-badge)<br>
 一款跨平台的开源森空岛 Wiki 工具箱<br>
 A cross-platform open-source toolbox for SKLAND/SKPORT Endfield Wiki
+
+## Quick Start / 快速开始
+
+### Download / 下载与使用
+
+请至 [Release](https://github.com/EIHRTeam/End-WikiPlus/releases/latest) 页面下载该程序。<br>
+Download the software from [Release](https://github.com/EIHRTeam/End-WikiPlus/releases/latest) page.
+
+### Build From Source / 从源码构建
+
+1. 安装 Node.js 20 LTS 或更高版本: https://nodejs.org/en/download <br>
+   Install Node.js 20 LTS or higer version: https://nodejs.org/en/download
+
+3. 安装 pnpm<br>
+   Install pnpm
+   - Windows (Powershell): `Invoke-WebRequest https://get.pnpm.io/install.ps1 -UseBasicParsing | Invoke-Expression`
+   - POSIX 系统: `curl -fsSL https://get.pnpm.io/install.sh | sh -`
+
+4. 安装依赖<br>
+   Install dependence
+   
+   ```bash
+   pnpm install
+   ```
+
+6. 启动开发版<br>
+   Launch debug build
+   
+   ```bash
+   pnpm tauri dev
+   ```
+
+8. 编译正式版<br>
+   Build release version
+   
+   ```bash
+   pnpm tauri build
+   ```
+
+
+
+## Contributors / 贡献者
+
+<a href="https://github.com/EIHRTeam/End-WikiPlus/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=EIHRTeam/End-WikiPlus" />
+</a>
 
 ## License / 授权
 
