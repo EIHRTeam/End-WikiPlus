@@ -2,7 +2,8 @@
 
 ![Version](https://img.shields.io/badge/version-0.2.2--alpha-blue?style=for-the-badge)<br>
 ![Vue](https://img.shields.io/badge/Vue-3-%234FC08D?logo=vuedotjs)
-![Tauri](https://img.shields.io/badge/Tauri-v2-%2324C8D8?logo=tauri)<br>
+![Tauri](https://img.shields.io/badge/Tauri-v2-%2324C8D8?logo=tauri)
+![Quasar](https://img.shields.io/badge/Quasar-v2-%234695EB?logo=quasar) <br>
 一款跨平台的开源森空岛 Wiki 工具箱<br>
 A cross-platform, open-source toolbox for the SKLAND/SKPORT Endfield Wiki.
 
