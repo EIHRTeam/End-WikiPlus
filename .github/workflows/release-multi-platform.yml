@@ -198,16 +198,14 @@ jobs:
         shell: pwsh
         run: |
           $VERSION = "${{ steps.get_version.outputs.VERSION }}"
-          $exe = Get-ChildItem -Path "src-tauri/target/x86_64-pc-windows-msvc/release" -Filter "*.exe" |
-            Select-Object -First 1
-
-          if (-not $exe) {
-            Write-Error "Could not find any .exe under src-tauri/target/x86_64-pc-windows-msvc/release"
+          $exePath = "src-tauri/target/x86_64-pc-windows-msvc/release/app.exe"
+          if (-not (Test-Path $exePath)) {
+            Write-Error "Could not find Windows app binary at $exePath"
             exit 1
           }
 
           $newExe = "EndWikiplus-x64-portable-$VERSION.exe"
-          Copy-Item $exe.FullName $newExe -Force
+          Copy-Item $exePath $newExe -Force
           "asset_path=$newExe" >> $env:GITHUB_OUTPUT
 
       - name: Upload Windows Artifact

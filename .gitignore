@@ -68,6 +68,7 @@ temp/
 *.png
 !src/assets/**/*.png
 !src-tauri/icons/**/*.png
+!src-tauri/gen/android/app/src/main/res/**/*.png
 !public/**/*.png
 
 # Log files
