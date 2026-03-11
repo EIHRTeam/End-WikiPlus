@@ -91,14 +91,24 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
 
       - name: Enable pnpm via Corepack
+        shell: pwsh
         run: |
           corepack enable
           corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
+          $store = pnpm store path
+          "PNPM_STORE_PATH=$store" >> $env:GITHUB_ENV
           pnpm --version
+
+      - name: Cache pnpm store
+        uses: actions/cache@v5
+        with:
+          path: ${{ env.PNPM_STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-${{ matrix.target }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-${{ matrix.target }}-
+            ${{ runner.os }}-pnpm-
 
       - name: Setup Java 17
         if: matrix.target == 'android'
