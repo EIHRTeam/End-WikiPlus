@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+.quasar/
+dist/
+
+# Rust/Tauri generated and build files
+src-tauri/gen/
+src-tauri/target/
+src-tauri/plugins/*/android/build/
+src-tauri/plugins/*/android/.tauri/
+
+# Test/cache outputs
+coverage/
+.vitest-result/
+.eslintcache
+
+# Temporary files
+temp/
+tmp/
+public/temp/
+*.log
+
+# Generated project content
+src/assets/*.generated.md
+item_info_*.json
+
+# Lockfile (auto-generated)
+pnpm-lock.yaml

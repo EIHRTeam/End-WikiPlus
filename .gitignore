@@ -1,0 +1,94 @@
+# OS files
+.DS_Store
+Thumbs.db
+*.local
+
+# Dependencies
+node_modules
+.pnpm-debug.log*
+
+# Quasar core related directories
+.quasar
+/dist
+/quasar.config.*.temporary.compiled*
+
+# Tauri / Rust related
+src-tauri/target
+src-tauri/gen/schemas
+src-tauri/plugins/*/android/build/
+src-tauri/plugins/*/android/.tauri/
+build_log.txt
+
+# Cordova / Capacitor
+/src-cordova/node_modules
+/src-cordova/platforms
+/src-cordova/plugins
+/src-cordova/www
+/src-capacitor/www
+/src-capacitor/node_modules
+
+# Cloudflare Wrangler
+.wrangler/
+.dev.vars
+
+# Editor / IDE
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+.claude
+.out-of-code-insights
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+build-android.ps1
+build-android.sh
+
+# Git / History
+.history
+
+# Project specific generated files
+src/assets/*.generated.md
+!src/assets/user-agreement.generated.md
+!src/assets/privacy-policy.generated.md
+item_info_*.json
+
+# Temporary files
+public/temp/
+temp/
+/tmp/
+*.png
+!src/assets/**/*.png
+!public/**/*.png
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Testing
+/coverage
+.vitest-result
+
+# Linting
+.eslintcache
+
+# Fonts (Ignore globally but allow project assets)
+*.ttf
+*.woff
+*.woff2
+*.otf
+!src/assets/font/**/*
+
+AGENTS.md
+GEMINI.md

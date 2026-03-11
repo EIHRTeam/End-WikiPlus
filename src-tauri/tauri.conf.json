@@ -1,0 +1,40 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "Endfield Wiki+",
+  "version": "0.2.1",
+  "identifier": "com.eihrteam.wikiplus.pub",
+  "build": {
+    "frontendDist": "../dist/spa",
+    "devUrl": "http://127.0.0.1:9000",
+    "beforeDevCommand": {
+      "script": "node scripts/tauri-dev-frontend.mjs",
+      "wait": false
+    },
+    "beforeBuildCommand": "pnpm build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Endfield Wiki+",
+        "width": 1210,
+        "height": 700,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["app", "dmg"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}

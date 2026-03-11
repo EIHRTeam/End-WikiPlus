@@ -1,0 +1,63 @@
+{
+  "name": "end-wikiplus",
+  "version": "0.2.1-alpha",
+  "description": "A cross-platform open-source Skland Wiki toolbox",
+  "productName": "Endfield Wiki+",
+  "author": "Endfield Industries Human Resource Team <staff@eihrteam.org>",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "eslint -c ./eslint.config.js \"./src*/**/*.{ts,js,cjs,mjs,vue}\"",
+    "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "dev": "quasar dev",
+    "build": "quasar build",
+    "build:cloudflare": "git fetch --unshallow 2>/dev/null || true && pnpm run build",
+    "postinstall": "quasar prepare"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.16.4",
+    "@tauri-apps/api": "^2.10.1",
+    "@tauri-apps/plugin-fs": "^2.4.5",
+    "@tauri-apps/plugin-http": "^2.5.7",
+    "@tauri-apps/plugin-notification": "^2.3.3",
+    "@tauri-apps/plugin-shell": "^2.3.5",
+    "axios": "^1.2.1",
+    "markdown-it": "^14.1.0",
+    "pinia": "^3.0.1",
+    "quasar": "^2.16.0",
+    "vue": "^3.5.22",
+    "vue-i18n": "^11.0.0",
+    "vue-router": "^4.0.12"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.14.0",
+    "@intlify/unplugin-vue-i18n": "^11.0.7",
+    "@quasar/app-vite": "^2.1.0",
+    "@tauri-apps/cli": "^2.10.0",
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^20.5.9",
+    "@vitest/ui": "^2.1.8",
+    "@vue/eslint-config-prettier": "^10.1.0",
+    "@vue/eslint-config-typescript": "^14.4.0",
+    "autoprefixer": "^10.4.2",
+    "eslint": "^9.14.0",
+    "eslint-plugin-vue": "^10.4.0",
+    "globals": "^16.4.0",
+    "jsdom": "^25.0.1",
+    "prettier": "^3.3.3",
+    "typescript": "^5.9.2",
+    "vite-plugin-checker": "^0.11.0",
+    "vitest": "^2.1.9",
+    "vue-eslint-parser": "^10.2.0",
+    "vue-tsc": "^3.0.7"
+  },
+  "engines": {
+    "node": "^28 || ^26 || ^24 || ^22 || ^20",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}

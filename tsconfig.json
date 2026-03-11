@@ -1,0 +1,5 @@
+{
+  "extends": "./.quasar/tsconfig.json",
+  "include": ["src/**/*.ts", "src/**/*.vue", "src/**/*.js", "src/**/*.d.ts", ".quasar/**/*.d.ts"],
+  "exclude": ["src-tauri", "dist", "node_modules"]
+}

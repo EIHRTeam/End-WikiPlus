@@ -1,60 +1,59 @@
 # Endfield Wikiplus
 
-![Version](https://img.shields.io/badge/version-0.2.2--alpha-blue?style=for-the-badge)<br>
+![Version](https://img.shields.io/badge/version-0.1.0--alpha-blue?style=for-the-badge)<br>
 ![Vue](https://img.shields.io/badge/Vue-3-%234FC08D?logo=vuedotjs)
 ![Tauri](https://img.shields.io/badge/Tauri-v2-%2324C8D8?logo=tauri)<br>
-一款跨平台的开源森空岛 Wiki 工具箱<br>
 A cross-platform, open-source toolbox for the SKLAND/SKPORT Endfield Wiki.
 
-English version: [README_en-US.md](README_en-US.md)
+Chinese documentation: [README.md](README.md)
 
-## 快速开始
+## Quick Start
 
-### 下载与使用
+### Download
 
-请至 [Release](https://github.com/EIHRTeam/End-WikiPlus/releases/latest) 页面下载该程序。
+Download the latest build from the [Release](https://github.com/EIHRTeam/End-WikiPlus/releases/latest) page.
 
-该项目支持平台：Windows、Linux、Mac OS、Android、iOS。
+Supported platforms: Windows, Linux, macOS, Android, and iOS.
 
-### 从源码构建
+### Build from Source
 
-1. 安装 Node.js 20 LTS 或更高版本: https://nodejs.org/en/download
+1. Install Node.js 20 LTS or later: https://nodejs.org/en/download
 
-2. 安装 pnpm：https://pnpm.io/zh/installation
+2. Install pnpm: https://pnpm.io/en/installation
 
-3. 安装依赖
+3. Install dependencies
 
    ```bash
    pnpm install
    ```
 
-4. 启动开发版
+4. Start the development build
 
    ```bash
    pnpm tauri dev
    ```
 
-5. 编译正式版
+5. Build the release package
 
    ```bash
    pnpm tauri build
    ```
 
-## 贡献者
+## Contributors
 
 <a href="https://github.com/EIHRTeam/End-WikiPlus/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=EIHRTeam/End-WikiPlus" />
 </a>
 
-## 鸣谢
+## Credits
 
 [AndreaFrederica](https://github.com/AndreaFrederica)
 
-## 技术栈
+## Tech Stack
 
-Tauri、Vue 3、TypeScript
+Tauri, Vue 3, TypeScript
 
-## License / 授权
+## License
 
 Copyright © 2026 Endfield Industries Human Resources Team. All rights reserved.
 

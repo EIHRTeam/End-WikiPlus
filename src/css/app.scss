@@ -1,0 +1,559 @@
+// app global css in SCSS form
+
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('../assets/font/hmos/HarmonyOS_Sans_SC_Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('../assets/font/hmos/HarmonyOS_Sans_SC_Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('../assets/font/hmos/HarmonyOS_Sans_SC_Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'HarmonyOS Sans TC';
+  src: url('../assets/font/hmos/HarmonyOS_Sans_TC_Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'HarmonyOS Sans TC';
+  src: url('../assets/font/hmos/HarmonyOS_Sans_TC_Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'HarmonyOS Sans TC';
+  src: url('../assets/font/hmos/HarmonyOS_Sans_TC_Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+// Light mode styles (Default)
+:root {
+  --card-bg: #e6e6e6;
+  --card-border: #d0d0d0;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #888888;
+  --text-caption: #757575;
+  --bg-primary: #cfcfcf;
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --card-header-bg: #d9d9d9;
+  --table-border-color: #b0b0b0;
+}
+
+// 强制设置浅色模式下的变量，确保覆盖 Quasar 可能的默认值
+body:not(.body--dark) {
+  --card-bg: #e6e6e6;
+  --card-border: #d0d0d0;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --bg-primary: #cfcfcf;
+  --card-header-bg: #d9d9d9;
+  --table-border-color: #b0b0b0;
+}
+
+// 确保在没有 body--dark 的情况下（即浅色模式），这些变量生效。
+// 即使 body 上没有 body--light，:root 也是生效的。
+// 但是为了防止组件内部的样式覆盖，我们需要确保这些变量的值在深色模式下被正确替换。
+
+body {
+  font-family:
+    'HarmonyOS Sans SC',
+    'HarmonyOS Sans TC',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  background: #cfcfcf;
+  color: var(--text-primary);
+  /* 确保内容不会被底部手势条遮挡 */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+// 针对繁体中文环境优先使用 TC 字体
+:root[lang^='zh-TW'] body,
+:root[lang^='zh-HK'] body,
+:root[lang^='zh-MO'] body {
+  font-family:
+    'HarmonyOS Sans TC',
+    'HarmonyOS Sans SC',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+}
+
+// 通用安全区域工具类
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+// 通用文本样式优化
+.text-h5 {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.text-caption {
+  color: var(--text-caption);
+}
+
+.widget-title {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+// Quasar 组件覆盖
+.q-tab__label {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.q-tab--active .q-tab__label {
+  color: #1976d2; // Primary color
+  font-weight: 600;
+}
+
+// Dark mode styles
+.body--dark {
+  --card-bg: #1e1e1e;
+  --card-border: #333333;
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaaa;
+  --card-header-bg: rgba(255, 255, 255, 0.05);
+  --table-border-color: rgba(255, 255, 255, 0.12);
+
+  color: var(--text-primary);
+
+  // Customize dark page background
+  background: #121212;
+
+  // 历史栏深色模式
+  .jei-list__history {
+    background: #1a1a1a !important;
+    border-top-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  // 底部搜索栏深色模式
+  .jei-bottombar {
+    background: #1a1a1a !important;
+    border-top-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  // 移动端导航栏深色模式
+  .jei-mobile-nav {
+    border-top-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  // 分页栏深色模式
+  .jei-list__pager {
+    border-top-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  // 类型侧边栏深色模式
+  .jei-type-sidebar {
+    border-right-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  // 网格占位符深色模式
+  .jei-grid__cell.placeholder {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+  }
+
+  // Wiki 描述深色模式
+  .wiki-description :deep(code) {
+    background: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .wiki-description :deep(pre) {
+    background: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .wiki-description :deep(blockquote) {
+    border-left-color: rgba(255, 255, 255, 0.2) !important;
+    color: rgba(255, 255, 255, 0.65) !important;
+  }
+
+  .wiki-description :deep(th),
+  .wiki-description :deep(td) {
+    border-color: rgba(255, 255, 255, 0.15) !important;
+  }
+
+  .wiki-description :deep(th) {
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .wiki-description :deep(a) {
+    color: #64b5f6 !important;
+  }
+
+  // === Wiki 渲染器深色模式 ===
+  .wiki-renderer-page,
+  .wiki-content,
+  .wiki-body {
+    background: #121212 !important;
+  }
+
+  .wiki-card--dark,
+  .upload-card,
+  .file-tools-card,
+  .wiki-widget,
+  .wiki-widget.q-card,
+  .wiki-widget.q-card--dark {
+    background: var(--card-bg) !important;
+    border-color: var(--card-border) !important;
+    color: rgba(255, 255, 255, 0.87) !important;
+  }
+
+  .wiki-widget .q-card__section,
+  .wiki-widget .q-card__section--vert,
+  .wiki-widget .widget-body,
+  .wiki-widget .widget-header {
+    background: var(--card-bg) !important;
+  }
+
+  .wiki-widget .q-separator {
+    background: rgba(255, 255, 255, 0.12) !important;
+  }
+
+  .wiki-widget .tab-header {
+    border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+  }
+
+  .wiki-widget .q-tab-panels,
+  .wiki-widget .q-tab-panel,
+  .wiki-widget .wiki-tab-panel {
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.87) !important;
+  }
+
+  .wiki-widget .wiki-table,
+  .wiki-widget .wiki-table td,
+  .wiki-widget .wiki-table th {
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    background: transparent !important;
+  }
+
+  .wiki-widget .wiki-table tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .wiki-widget,
+  .wiki-widget .widget-title,
+  .wiki-widget .stack-title,
+  .wiki-document,
+  .wiki-text-block,
+  .wiki-list,
+  .wiki-list-item,
+  .wiki-entry-card,
+  .wiki-entry-inline,
+  .wiki-table,
+  .wiki-table td,
+  .wiki-table th,
+  .table-label,
+  .table-value {
+    color: rgba(255, 255, 255, 0.87) !important;
+  }
+
+  .wiki-widget .text-secondary,
+  .wiki-widget .entry-count,
+  .wiki-widget .card-count,
+  .wiki-widget .image-description,
+  .wiki-widget .wiki-unknown-block .block-data {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  // Storage Editor JSON 预览深色模式
+  .json-preview {
+    background: #1e1e1e;
+    color: #e5e5e5;
+  }
+
+  .json-preview-error {
+    background: rgba(255, 82, 82, 0.12);
+  }
+
+  // === 规划器深色模式 ===
+
+  // 决策区块
+  .planner__decision {
+    border-left-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  // 树表样式
+  .planner__tree-table {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .planner__tree-table-header {
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .planner__tree-table-row {
+    border-top-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  // 树连接线
+  .planner__connect--last,
+  .planner__connect--trail {
+    border-left-color: rgba(255, 255, 255, 0.3) !important;
+  }
+
+  // 合成树总计行
+  .planner__tree-table-footer {
+    border-top-color: rgba(255, 255, 255, 0.08) !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+  }
+
+  .planner__tree-footer-label,
+  .planner__tree-footer-values {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  // === Vue Flow 深色模式 ===
+
+  // Flow 容器
+  .planner__flow {
+    background: #1a1a1a !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .planner__pagefull--active {
+    background: #121212 !important;
+  }
+
+  // Flow 节点
+  .planner__flow-node {
+    background: #252525 !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+  }
+
+  .planner__flow-node-title {
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  .planner__flow-node-sub {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  // 机器节点回退图标
+  .planner__flow-node-icon-fallback {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  // Handle (连接点)
+  .planner__handle {
+    background: rgba(255, 255, 255, 0.4) !important;
+    border-color: rgba(0, 0, 0, 0.3) !important;
+  }
+
+  // Vue Flow 背景网格
+  :deep(.vue-flow__background) {
+    background-color: #1a1a1a !important;
+  }
+
+  :deep(.vue-flow__edge-path) {
+    stroke: rgba(255, 255, 255, 0.4) !important;
+  }
+
+  :deep(.vue-flow__edge .vue-flow__edge-label) {
+    background: rgba(0, 0, 0, 0.7) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    fill: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  // === Vue Flow Controls 深色模式 ===
+  :deep(.vue-flow__controls) {
+    button {
+      background: #252525 !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+
+      &:hover {
+        background: #333333 !important;
+        border-color: rgba(255, 255, 255, 0.25) !important;
+      }
+
+      &:active {
+        background: #404040 !important;
+      }
+
+      // Controls 按钮内的 SVG 图标
+      svg {
+        fill: rgba(255, 255, 255, 0.7) !important;
+      }
+
+      &:hover svg {
+        fill: rgba(255, 255, 255, 0.9) !important;
+      }
+
+      // SVG 内部的 path 元素
+      svg path {
+        fill: rgba(255, 255, 255, 0.7) !important;
+      }
+
+      &:hover svg path {
+        fill: rgba(255, 255, 255, 0.9) !important;
+      }
+    }
+  }
+
+  // === Vue Flow MiniMap 深色模式 ===
+  :deep(.vue-flow__minimap) {
+    background: #1a1a1a !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+
+    // MiniMap 节点
+    .vue-flow__minimap-node {
+      fill: #4a4a4a !important;
+      stroke: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .vue-flow__minimap-node.selected {
+      fill: #1976d2 !important;
+    }
+
+    // MiniMap 形状（圆形/矩形）
+    circle,
+    rect {
+      stroke: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    // MiniMap 遮罩
+    .vue-flow__minimap-mask {
+      fill: rgba(0, 0, 0, 0.3) !important;
+    }
+
+    // MiniMap 可视区域框
+    .vue-flow__minimap-viewport {
+      fill: rgba(255, 255, 255, 0.05) !important;
+      stroke: rgba(255, 255, 255, 0.3) !important;
+    }
+  }
+}
+
+// === Vue Flow 深色模式全局样式（Portal 渲染的组件）===
+// Vue Flow 通过 Portal 渲染 Controls 和 MiniMap 到 body 下，需要全局选择器
+body.body--dark {
+  // Vue Flow Controls
+  .vue-flow__controls button {
+    background: #252525 !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+
+    &:hover {
+      background: #333333 !important;
+      border-color: rgba(255, 255, 255, 0.25) !important;
+    }
+
+    &:active {
+      background: #404040 !important;
+    }
+
+    svg {
+      fill: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    &:hover svg {
+      fill: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    svg path {
+      fill: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    &:hover svg path {
+      fill: rgba(255, 255, 255, 0.9) !important;
+    }
+  }
+
+  // Vue Flow MiniMap
+  .vue-flow__minimap {
+    background: #1a1a1a !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+
+    .vue-flow__minimap-node {
+      fill: #4a4a4a !important;
+      stroke: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .vue-flow__minimap-node.selected {
+      fill: #1976d2 !important;
+    }
+
+    circle,
+    rect {
+      stroke: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .vue-flow__minimap-mask {
+      fill: rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .vue-flow__minimap-viewport {
+      fill: rgba(255, 255, 255, 0.05) !important;
+      stroke: rgba(255, 255, 255, 0.3) !important;
+    }
+  }
+}
+
+/*
+  Wiki List Page: Rarity indicator bar at the bottom of the item card image.
+  This bar is absolutely positioned relative to a wrapper div.
+*/
+.rarity-indicator-bar {
+  height: 4px;
+  width: 100%; /* Ensure it spans the full width of the container */
+  z-index: 5; /* Lower z-index is fine now, just needs to be above the image */
+}
+
+/*
+  Wiki List Page: Card sizing.
+  - Desktop: Fixed 180x240px.
+  - Mobile: Responsive (width inherited from grid col-6).
+*/
+.item-card {
+  @media (min-width: 600px) {
+    width: 180px;
+    height: 240px;
+  }
+}
+
+/*
+  Wiki List Page: Styling for the small attribute icons (profession, element)
+  that are overlaid on the top-left of the item card image.
+*/
+/*
+  Wiki List Page: A simple container for attribute icons to provide minimal padding
+  and spacing, positioning them neatly at the top-left of the card.
+*/
+.icon-container {
+  padding: 2px;
+  gap: 2px;
+}
+
+.attribute-icon {
+  width: 20px;
+  height: 20px;
+  background-color: transparent;
+}

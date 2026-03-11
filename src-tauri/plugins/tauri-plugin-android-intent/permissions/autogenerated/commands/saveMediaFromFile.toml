@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-saveMediaFromFile"
+description = "Enables the saveMediaFromFile command without any pre-configured scope."
+commands.allow = ["saveMediaFromFile"]
+
+[[permission]]
+identifier = "deny-saveMediaFromFile"
+description = "Denies the saveMediaFromFile command without any pre-configured scope."
+commands.deny = ["saveMediaFromFile"]

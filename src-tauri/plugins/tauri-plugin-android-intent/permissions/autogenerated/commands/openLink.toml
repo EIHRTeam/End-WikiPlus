@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-openLink"
+description = "Enables the openLink command without any pre-configured scope."
+commands.allow = ["openLink"]
+
+[[permission]]
+identifier = "deny-openLink"
+description = "Denies the openLink command without any pre-configured scope."
+commands.deny = ["openLink"]

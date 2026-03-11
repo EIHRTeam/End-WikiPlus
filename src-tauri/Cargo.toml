@@ -1,0 +1,48 @@
+[package]
+name = "app"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["you"]
+license = ""
+repository = ""
+edition = "2021"
+rust-version = "1.77.2"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.5.4", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "2.10.0", features = [] }
+tauri-plugin-log = "2"
+tauri-plugin-fs = "2.4.5"
+tauri-plugin-http = "2.5.7"
+tauri-plugin-shell = "2.3.5"
+futures = "0.3.31"
+anyhow = "1.0.101"
+reqwest = { version = "0.12.8", default-features = false, features = ["json", "rustls-tls-webpki-roots"] }
+tokio = { version = "1.49.0", features = ["full"] }
+hmac = "0.12.1"
+sha2 = "0.10.8"
+md-5 = "0.10.6"
+hex = "0.4.3"
+tauri-plugin-android-intent = { path = "plugins/tauri-plugin-android-intent" }
+uuid = { version = "1.10.0", features = ["v4", "fast-rng"] }
+rsa = "0.9.6"
+rand = "0.8.5"
+des = "0.8.1"
+aes = "0.8.4"
+cbc = { version = "0.1.2", features = ["alloc"] }
+flate2 = { version = "1.0.30", features = ["miniz_oxide"], default-features = false }
+base64 = "0.22.1"
+block-padding = "0.3.3"
+tauri-plugin-notification = "2"
+

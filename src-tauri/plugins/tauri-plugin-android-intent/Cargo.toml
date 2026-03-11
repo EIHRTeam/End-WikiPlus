@@ -1,0 +1,18 @@
+[package]
+name = "tauri-plugin-android-intent"
+version = "0.1.0"
+edition = "2021"
+links = "tauri-plugin-android-intent"
+authors = ["EIHRTeam"]
+license = "MIT OR Apache-2.0"
+description = "A Tauri plugin to open external links on Android using native Intents."
+repository = "https://github.com/EIHRTeam/end-wikiplus-app"
+
+[dependencies]
+tauri = { version = "2.10.0" }
+serde = "1.0"
+log = "0.4"
+thiserror = "1.0"
+
+[build-dependencies]
+tauri-plugin = { version = "2.5.3", features = ["build"] }

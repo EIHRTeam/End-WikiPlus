@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="none">
+    <mask id="prefix__a" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="120" height="120">
+        <path d="M0 120h120L0 0v120z" fill="#D9D9D9" />
+    </mask>
+    <defs>
+        <linearGradient id="prefix__paint0_linear_11_928" x1="60.5" y1="60" x2="54.5" y2="66"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-color="#9B9B9B" stop-opacity=".1" />
+            <stop offset="1" stop-color="#9B9B9B" stop-opacity="0" />
+        </linearGradient>
+    </defs>
+    <g mask="url(#prefix__a)">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M48.105 64.64H16V32h32.105v32.64zM41.73 38.48H22.374v19.68H41.73V38.48zm-6.374 45.84h-6.373v6.48h6.373v-6.48zm33.286 13.2h6.373V104h-6.373v-6.48zM28.983 45.2h6.374v6.48h-6.373V45.2zm52.643 52.32H88V104h-6.374v-6.48zm0-26.16v12.96h-6.61V71.36h-19.12V104h6.373V77.84h6.374V90.8H88V71.36h-6.374zM16 104h32.105V71.36H16V104zm6.374-26.16H41.73v19.68H22.374V77.84zM68.643 45.2h6.373v6.48h-6.373V45.2zM55.895 32H88v32.64H55.895V32zm6.374 26.16h19.357V38.48H62.27v19.68z"
+            fill="#000" />
+        <path d="M120 120L0 0v12l108.476 108H120z" fill="url(#prefix__paint0_linear_11_928)" />
+    </g>
+</svg>
