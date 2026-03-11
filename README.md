@@ -1,6 +1,6 @@
 # Endfield Wikiplus
 
-![Version](https://img.shields.io/badge/version-0.2.2--alpha-blue?style=for-the-badge)<br>
+![Version](https://img.shields.io/badge/version-0.2.1--alpha-blue?style=for-the-badge)<br>
 ![Vue](https://img.shields.io/badge/Vue-3-%234FC08D?logo=vuedotjs)
 ![Tauri](https://img.shields.io/badge/Tauri-v2-%2324C8D8?logo=tauri)
 ![Quasar](https://img.shields.io/badge/Quasar-v2-%234695EB?logo=quasar) <br>
