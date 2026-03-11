@@ -194,9 +194,8 @@ jobs:
 
       - name: Prepare Windows Asset
         if: matrix.target == 'windows'
+        id: prepare_windows_asset
         shell: pwsh
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $VERSION = "${{ steps.get_version.outputs.VERSION }}"
           $exe = Get-ChildItem -Path "src-tauri/target/x86_64-pc-windows-msvc/release" -Filter "*.exe" |
@@ -209,7 +208,21 @@ jobs:
 
           $newExe = "EndWikiplus-x64-portable-$VERSION.exe"
           Copy-Item $exe.FullName $newExe -Force
-          gh release upload "${{ inputs.tag_name }}" "$newExe" --clobber
+          "asset_path=$newExe" >> $env:GITHUB_OUTPUT
+
+      - name: Upload Windows Artifact
+        if: matrix.target == 'windows'
+        uses: actions/upload-artifact@v6
+        with:
+          name: release-windows-${{ steps.get_version.outputs.VERSION }}
+          path: ${{ steps.prepare_windows_asset.outputs.asset_path }}
+          if-no-files-found: error
+
+      - name: Upload Windows Release Asset
+        if: matrix.target == 'windows'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ inputs.tag_name }}" "${{ steps.prepare_windows_asset.outputs.asset_path }}" --clobber
 
       - name: Build Linux x64 (deb)
         if: matrix.target == 'linux'
@@ -217,6 +230,7 @@ jobs:
 
       - name: Prepare Linux Asset
         if: matrix.target == 'linux'
+        id: prepare_linux_asset
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -225,7 +239,21 @@ jobs:
           OLD_DEB=$(ls src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/deb/*.deb | head -n 1)
           NEW_DEB="EndWikiplus-x64-$VERSION.deb"
           mv "$OLD_DEB" "$NEW_DEB"
-          gh release upload "${{ inputs.tag_name }}" "$NEW_DEB" --clobber
+          echo "asset_path=$NEW_DEB" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Linux Artifact
+        if: matrix.target == 'linux'
+        uses: actions/upload-artifact@v6
+        with:
+          name: release-linux-${{ steps.get_version.outputs.VERSION }}
+          path: ${{ steps.prepare_linux_asset.outputs.asset_path }}
+          if-no-files-found: error
+
+      - name: Upload Linux Release Asset
+        if: matrix.target == 'linux'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ inputs.tag_name }}" "${{ steps.prepare_linux_asset.outputs.asset_path }}" --clobber
 
       - name: Build Android arm64-v8a
         if: matrix.target == 'android'
@@ -240,6 +268,7 @@ jobs:
 
       - name: Prepare Android Asset
         if: matrix.target == 'android'
+        id: prepare_android_asset
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -253,7 +282,21 @@ jobs:
           fi
           NEW_APK="EndWikiplus-arm64v8a-$VERSION.apk"
           mv "$OLD_APK" "$NEW_APK"
-          gh release upload "${{ inputs.tag_name }}" "$NEW_APK" --clobber
+          echo "asset_path=$NEW_APK" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Android Artifact
+        if: matrix.target == 'android'
+        uses: actions/upload-artifact@v6
+        with:
+          name: release-android-${{ steps.get_version.outputs.VERSION }}
+          path: ${{ steps.prepare_android_asset.outputs.asset_path }}
+          if-no-files-found: error
+
+      - name: Upload Android Release Asset
+        if: matrix.target == 'android'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ inputs.tag_name }}" "${{ steps.prepare_android_asset.outputs.asset_path }}" --clobber
 
       - name: Build macOS DMG (Apple Silicon)
         if: matrix.target == 'macos'
@@ -261,6 +304,7 @@ jobs:
 
       - name: Prepare macOS Asset
         if: matrix.target == 'macos'
+        id: prepare_macos_asset
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -269,7 +313,21 @@ jobs:
           OLD_DMG=$(ls src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg | head -n 1)
           NEW_DMG="EndWikiplus-macos-arm64-$VERSION.dmg"
           mv "$OLD_DMG" "$NEW_DMG"
-          gh release upload "${{ inputs.tag_name }}" "$NEW_DMG" --clobber
+          echo "asset_path=$NEW_DMG" >> "$GITHUB_OUTPUT"
+
+      - name: Upload macOS Artifact
+        if: matrix.target == 'macos'
+        uses: actions/upload-artifact@v6
+        with:
+          name: release-macos-${{ steps.get_version.outputs.VERSION }}
+          path: ${{ steps.prepare_macos_asset.outputs.asset_path }}
+          if-no-files-found: error
+
+      - name: Upload macOS Release Asset
+        if: matrix.target == 'macos'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ inputs.tag_name }}" "${{ steps.prepare_macos_asset.outputs.asset_path }}" --clobber
 
       - name: Build iOS IPA (unsigned)
         if: matrix.target == 'ios'
@@ -291,6 +349,7 @@ jobs:
 
       - name: Prepare iOS Asset
         if: matrix.target == 'ios'
+        id: prepare_ios_asset
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -314,4 +373,18 @@ jobs:
             cd "$RUNNER_TEMP"
             zip -qry "$GITHUB_WORKSPACE/$NEW_IPA" Payload
           )
-          gh release upload "${{ inputs.tag_name }}" "$NEW_IPA" --clobber
+          echo "asset_path=$NEW_IPA" >> "$GITHUB_OUTPUT"
+
+      - name: Upload iOS Artifact
+        if: matrix.target == 'ios'
+        uses: actions/upload-artifact@v6
+        with:
+          name: release-ios-${{ steps.get_version.outputs.VERSION }}
+          path: ${{ steps.prepare_ios_asset.outputs.asset_path }}
+          if-no-files-found: error
+
+      - name: Upload iOS Release Asset
+        if: matrix.target == 'ios'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ inputs.tag_name }}" "${{ steps.prepare_ios_asset.outputs.asset_path }}" --clobber

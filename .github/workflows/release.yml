@@ -188,11 +188,10 @@ jobs:
         if: matrix.target == 'windows'
         run: pnpm tauri build --target x86_64-pc-windows-msvc
 
-      - name: Prepare Windows Assets
+      - name: Prepare Windows Asset
         if: matrix.target == 'windows'
+        id: prepare_windows_asset
         shell: pwsh
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $VERSION = "${{ steps.get_version.outputs.VERSION }}"
 
@@ -208,14 +207,29 @@ jobs:
 
           $NEW_EXE = "EndWikiplus-x64-portable-$VERSION.exe"
           Copy-Item $exe.FullName $NEW_EXE -Force
-          gh release upload "${{ inputs.tag_name }}" "$NEW_EXE" --clobber
+          "asset_path=$NEW_EXE" >> $env:GITHUB_OUTPUT
+
+      - name: Upload Windows Artifact
+        if: matrix.target == 'windows'
+        uses: actions/upload-artifact@v6
+        with:
+          name: release-windows-${{ steps.get_version.outputs.VERSION }}
+          path: ${{ steps.prepare_windows_asset.outputs.asset_path }}
+          if-no-files-found: error
+
+      - name: Upload Windows Release Asset
+        if: matrix.target == 'windows'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ inputs.tag_name }}" "${{ steps.prepare_windows_asset.outputs.asset_path }}" --clobber
 
       - name: Build Linux x64 (deb)
         if: matrix.target == 'linux'
         run: pnpm tauri build --target x86_64-unknown-linux-gnu --bundles deb
 
-      - name: Prepare Linux Assets
+      - name: Prepare Linux Asset
         if: matrix.target == 'linux'
+        id: prepare_linux_asset
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -224,7 +238,21 @@ jobs:
           OLD_DEB=$(ls src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/deb/*.deb | head -n 1)
           NEW_DEB="EndWikiplus-x64-$VERSION.deb"
           mv "$OLD_DEB" "$NEW_DEB"
-          gh release upload "${{ inputs.tag_name }}" "$NEW_DEB" --clobber
+          echo "asset_path=$NEW_DEB" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Linux Artifact
+        if: matrix.target == 'linux'
+        uses: actions/upload-artifact@v6
+        with:
+          name: release-linux-${{ steps.get_version.outputs.VERSION }}
+          path: ${{ steps.prepare_linux_asset.outputs.asset_path }}
+          if-no-files-found: error
+
+      - name: Upload Linux Release Asset
+        if: matrix.target == 'linux'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ inputs.tag_name }}" "${{ steps.prepare_linux_asset.outputs.asset_path }}" --clobber
 
       - name: Build Android aarch64
         if: matrix.target == 'android'
@@ -238,8 +266,9 @@ jobs:
           set -euo pipefail
           pnpm tauri android build --target aarch64
 
-      - name: Prepare Android Assets
+      - name: Prepare Android Asset
         if: matrix.target == 'android'
+        id: prepare_android_asset
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -253,7 +282,21 @@ jobs:
           fi
           NEW_APK="EndWikiplus-arm64v8a-$VERSION.apk"
           mv "$OLD_APK" "$NEW_APK"
-          gh release upload "${{ inputs.tag_name }}" "$NEW_APK" --clobber
+          echo "asset_path=$NEW_APK" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Android Artifact
+        if: matrix.target == 'android'
+        uses: actions/upload-artifact@v6
+        with:
+          name: release-android-${{ steps.get_version.outputs.VERSION }}
+          path: ${{ steps.prepare_android_asset.outputs.asset_path }}
+          if-no-files-found: error
+
+      - name: Upload Android Release Asset
+        if: matrix.target == 'android'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ inputs.tag_name }}" "${{ steps.prepare_android_asset.outputs.asset_path }}" --clobber
 
   update-readme:
     needs: build-and-release
