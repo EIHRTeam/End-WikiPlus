@@ -50,7 +50,7 @@ Supported platforms: Windows, Linux, macOS, Android, and iOS.
 
 ## Credits
 
-[AndreaFrederica](https://github.com/AndreaFrederica)
+[AndreaFrederica](https://github.com/AndreaFrederica) and [TheJeiWebProject](https://github.com/TheJEIWebProject)
 
 ## Tech Stack
 
