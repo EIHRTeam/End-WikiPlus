@@ -51,7 +51,7 @@ English version: [README_en-US.md](README_en-US.md)
 
 ## 鸣谢
 
-[AndreaFrederica](https://github.com/AndreaFrederica)
+[AndreaFrederica](https://github.com/AndreaFrederica) 及 [TheJeiWebProject](https://github.com/TheJEIWebProject)
 
 ## 技术栈
 
