@@ -19,23 +19,25 @@ English version: [README_en-US.md](README_en-US.md)
 
 ### 从源码构建
 
-1. 安装 Node.js 20 LTS 或更高版本: https://nodejs.org/en/download
+1. 安装 Node.js 20 LTS 或更高版本：https://nodejs.org/en/download
 
 2. 安装 pnpm：https://pnpm.io/zh/installation
 
-3. 安装依赖
+3. 安装 Rust 工具链：https://rust-lang.org/tools/install/
+
+4. 安装依赖
 
    ```bash
    pnpm install
    ```
 
-4. 启动开发版
+5. 启动开发版
 
    ```bash
    pnpm tauri dev
    ```
 
-5. 编译正式版
+6. 编译正式版
 
    ```bash
    pnpm tauri build
