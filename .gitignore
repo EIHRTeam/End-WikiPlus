@@ -67,6 +67,7 @@ temp/
 /tmp/
 *.png
 !src/assets/**/*.png
+!src-tauri/icons/**/*.png
 !public/**/*.png
 
 # Log files
