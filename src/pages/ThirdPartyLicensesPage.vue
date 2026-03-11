@@ -23,7 +23,7 @@ import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import MarkdownIt from 'markdown-it';
-import thirdPartyMd from '../../THIRD-PARTY_LICENSES.md?raw';
+import thirdPartyMd from 'src/assets/third-party-licenses.generated.md?raw';
 import { backOrFallback } from 'src/utils/navigation';
 
 const $q = useQuasar();

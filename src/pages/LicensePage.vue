@@ -23,7 +23,7 @@ import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import MarkdownIt from 'markdown-it';
-import licenseText from '../../LICENSE?raw';
+import licenseMd from 'src/assets/license.generated.md?raw';
 import { backOrFallback } from 'src/utils/navigation';
 
 const $q = useQuasar();
@@ -35,7 +35,6 @@ const md = new MarkdownIt({
   typographer: true,
 });
 
-const licenseMd = ['# License', '', '```text', licenseText, '```'].join('\n');
 const html = computed(() => md.render(licenseMd));
 
 function handleClose() {

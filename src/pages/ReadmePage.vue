@@ -12,7 +12,7 @@
 import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 import MarkdownIt from 'markdown-it';
-import readmeMd from '../../README.md?raw';
+import readmeMd from 'src/assets/readme.generated.md?raw';
 
 const $q = useQuasar();
 
