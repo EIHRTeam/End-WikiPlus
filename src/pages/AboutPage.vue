@@ -137,15 +137,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { invoke } from '@tauri-apps/api/core';
 import { open } from '@tauri-apps/plugin-shell';
-import aboutMd from 'src/assets/about.generated.md?raw';
+import tauriConfig from '../../src-tauri/tauri.conf.json';
 
 const router = useRouter();
 
-const buildInfo = ref<Record<string, string>>({});
+const buildInfo: Record<string, string> = {
+  version: tauriConfig.version,
+};
 
 async function openLink(url: string) {
   try {
@@ -162,37 +163,6 @@ async function openLink(url: string) {
 function navigateTo(path: string) {
   router.push(path).catch(() => undefined);
 }
-
-function parseAboutMd() {
-  const lines = aboutMd.split('\n');
-  let currentSection = '';
-
-  for (let i = 0; i < lines.length; i++) {
-    const rawLine = lines[i];
-    if (rawLine === undefined) continue;
-    const line = rawLine.trim();
-    if (!line) continue;
-
-    if (line.startsWith('# ')) continue;
-
-    if (line.startsWith('## ')) {
-      currentSection = line.replace('## ', '');
-      continue;
-    }
-
-    if (currentSection === 'Build' && line.startsWith('- ')) {
-      const match = line.match(/- (.*?): (.*)/);
-      if (match && match[1]) {
-        buildInfo.value[match[1]] = match[2] || '';
-      }
-      continue;
-    }
-  }
-}
-
-onMounted(() => {
-  parseAboutMd();
-});
 </script>
 
 <style scoped lang="scss">
