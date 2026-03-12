@@ -1000,7 +1000,9 @@ struct FingerprintData {
     r#box: String,
 }
 
-fn des_encrypt_ecb(key: &[u8], data: &[u8]) -> Result<Vec<u8>, String> {
+// 数美 DID 的 Protocol 102 要求对部分字段做 DES-ECB 混淆。
+// 这里的 DES 仅用于兼容上游遗留协议，不能复用于本地敏感数据的通用加密。
+fn protocol_102_legacy_des_ecb_encrypt(key: &[u8], data: &[u8]) -> Result<Vec<u8>, String> {
     use des::cipher::{BlockEncrypt, KeyInit};
     let cipher = Des::new_from_slice(key).map_err(|e| e.to_string())?;
 
@@ -1021,7 +1023,7 @@ fn des_encrypt_ecb(key: &[u8], data: &[u8]) -> Result<Vec<u8>, String> {
 
 fn get_protocol_102_map() -> BTreeMap<String, (String, bool, String)> {
     let mut map = BTreeMap::new();
-    // Key: original_name, Value: (obfuscated_name, is_encrypt, des_key)
+    // Key: original_name, Value: (obfuscated_name, is_encrypt, legacy_des_key)
     map.insert("appId".into(), ("xx".into(), true, "uy7mzc4h".into()));
     map.insert("box".into(), ("jf".into(), false, "".into()));
     map.insert("canvas".into(), ("yk".into(), true, "snrn887t".into()));
@@ -1175,7 +1177,7 @@ async fn generate_did(fingerprint: FingerprintData) -> Result<String, String> {
     let protocol_map = get_protocol_102_map();
     let mut obfuscated_inner_data: BTreeMap<String, Value> = BTreeMap::new();
     for (key, value) in inner_data_fields {
-        if let Some((obfuscated_name, is_encrypt, des_key)) = protocol_map.get(&key) {
+        if let Some((obfuscated_name, is_encrypt, legacy_des_key)) = protocol_map.get(&key) {
             if *is_encrypt {
                 let value_str = match &value {
                     Value::String(s) => s.clone(),
@@ -1183,7 +1185,10 @@ async fn generate_did(fingerprint: FingerprintData) -> Result<String, String> {
                     Value::Bool(b) => b.to_string(),
                     _ => serde_json::to_string(&value).unwrap(),
                 };
-                let encrypted_value = des_encrypt_ecb(des_key.as_bytes(), value_str.as_bytes())?;
+                let encrypted_value = protocol_102_legacy_des_ecb_encrypt(
+                    legacy_des_key.as_bytes(),
+                    value_str.as_bytes(),
+                )?;
                 obfuscated_inner_data.insert(
                     obfuscated_name.clone(),
                     Value::String(BASE64_STANDARD.encode(encrypted_value)),

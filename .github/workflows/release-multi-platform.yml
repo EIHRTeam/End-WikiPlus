@@ -210,7 +210,7 @@ jobs:
 
       - name: Upload Windows Artifact
         if: matrix.target == 'windows'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: release-windows-${{ steps.get_version.outputs.VERSION }}
           path: ${{ steps.prepare_windows_asset.outputs.asset_path }}
@@ -241,7 +241,7 @@ jobs:
 
       - name: Upload Linux Artifact
         if: matrix.target == 'linux'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: release-linux-${{ steps.get_version.outputs.VERSION }}
           path: ${{ steps.prepare_linux_asset.outputs.asset_path }}
@@ -284,7 +284,7 @@ jobs:
 
       - name: Upload Android Artifact
         if: matrix.target == 'android'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: release-android-${{ steps.get_version.outputs.VERSION }}
           path: ${{ steps.prepare_android_asset.outputs.asset_path }}
@@ -315,7 +315,7 @@ jobs:
 
       - name: Upload macOS Artifact
         if: matrix.target == 'macos'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: release-macos-${{ steps.get_version.outputs.VERSION }}
           path: ${{ steps.prepare_macos_asset.outputs.asset_path }}
@@ -375,7 +375,7 @@ jobs:
 
       - name: Upload iOS Artifact
         if: matrix.target == 'ios'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: release-ios-${{ steps.get_version.outputs.VERSION }}
           path: ${{ steps.prepare_ios_asset.outputs.asset_path }}
