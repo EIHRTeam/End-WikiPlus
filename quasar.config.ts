@@ -14,6 +14,28 @@ function getGitCommitHash(): string {
   }
 }
 
+function getBuildTime(): string {
+  const parts = new Intl.DateTimeFormat('sv-SE', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  })
+    .formatToParts(new Date())
+    .reduce<Record<string, string>>((acc, part) => {
+      if (part.type !== 'literal') {
+        acc[part.type] = part.value;
+      }
+      return acc;
+    }, {});
+
+  return `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}:${parts.second}`;
+}
+
 export default defineConfig((ctx) => {
   const isTauriDev = process.env.TAURI_DEV === '1';
 
@@ -68,6 +90,7 @@ export default defineConfig((ctx) => {
       // env: {},
       rawDefine: {
         __APP_VERSION__: JSON.stringify(getGitCommitHash()),
+        __APP_BUILD_TIME__: JSON.stringify(getBuildTime()),
       },
       // ignorePublicFolder: true,
       // minify: false,

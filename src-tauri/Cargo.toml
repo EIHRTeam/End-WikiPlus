@@ -45,4 +45,3 @@ flate2 = { version = "1.0.30", features = ["miniz_oxide"], default-features = fa
 base64 = "0.22.1"
 block-padding = "0.3.3"
 tauri-plugin-notification = "2"
-

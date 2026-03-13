@@ -22,13 +22,13 @@
           </q-item-section>
         </q-item>
 
-        <q-item v-if="buildInfo['Generated at']">
+        <q-item v-if="buildInfo.buildTime">
           <q-item-section avatar>
             <q-icon name="schedule" color="primary" />
           </q-item-section>
           <q-item-section>
             <q-item-label>{{ $t('about.buildTime') }}</q-item-label>
-            <q-item-label caption class="text-family-mono">{{ buildInfo['Generated at'] }} (GMT+8)</q-item-label>
+            <q-item-label caption class="text-family-mono">{{ buildInfo.buildTime }} (GMT+8)</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
@@ -146,6 +146,7 @@ const router = useRouter();
 
 const buildInfo: Record<string, string> = {
   version: tauriConfig.version,
+  buildTime: __APP_BUILD_TIME__,
 };
 
 async function openLink(url: string) {
