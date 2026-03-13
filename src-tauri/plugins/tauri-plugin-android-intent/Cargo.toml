@@ -2,6 +2,8 @@
 name = "tauri-plugin-android-intent"
 version = "0.1.0"
 edition = "2021"
+# Keep the build script explicit so manifest-only tooling still recognizes this as a plugin crate.
+build = "build.rs"
 links = "tauri-plugin-android-intent"
 authors = ["EIHRTeam"]
 license = "MIT OR Apache-2.0"

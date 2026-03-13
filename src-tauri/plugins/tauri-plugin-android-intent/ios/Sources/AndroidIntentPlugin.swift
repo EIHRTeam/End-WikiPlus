@@ -239,12 +239,7 @@ class AndroidIntentPlugin: Plugin {
   // ═══════════════════════════════════════════════════════════════════
 
   private func saveToPhotosLibrary(invoke: Invoke, sourceURL: URL, fileName: String, mimeType: String) {
-    let authorizationHandler: (PHAuthorizationStatus) -> Void = { status in
-      guard status == .authorized || status == .limited else {
-        invoke.reject("Photo Library permission denied")
-        return
-      }
-
+    let persistMedia: () -> Void = {
       var placeholder: PHObjectPlaceholder?
       PHPhotoLibrary.shared().performChanges {
         let request = PHAssetCreationRequest.forAsset()
@@ -271,6 +266,15 @@ class AndroidIntentPlugin: Plugin {
     }
 
     if #available(iOS 14, *) {
+      let authorizationHandler: (PHAuthorizationStatus) -> Void = { status in
+        guard status == .authorized || status == .limited else {
+          invoke.reject("Photo Library permission denied")
+          return
+        }
+
+        persistMedia()
+      }
+
       let status = PHPhotoLibrary.authorizationStatus(for: .addOnly)
       if status == .notDetermined {
         PHPhotoLibrary.requestAuthorization(for: .addOnly, handler: authorizationHandler)
@@ -278,6 +282,15 @@ class AndroidIntentPlugin: Plugin {
         authorizationHandler(status)
       }
     } else {
+      let authorizationHandler: (PHAuthorizationStatus) -> Void = { status in
+        guard status == .authorized else {
+          invoke.reject("Photo Library permission denied")
+          return
+        }
+
+        persistMedia()
+      }
+
       let status = PHPhotoLibrary.authorizationStatus()
       if status == .notDetermined {
         PHPhotoLibrary.requestAuthorization(authorizationHandler)
