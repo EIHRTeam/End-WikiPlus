@@ -70,6 +70,7 @@ temp/
 !src-tauri/icons/**/*.png
 !src-tauri/gen/android/app/src/main/res/**/*.png
 !public/**/*.png
+src-tauri/icons/apple/
 
 # Log files
 npm-debug.log*
@@ -94,3 +95,4 @@ pnpm-debug.log*
 
 AGENTS.md
 GEMINI.md
+build-android.zsh
