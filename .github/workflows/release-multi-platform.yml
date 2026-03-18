@@ -259,7 +259,11 @@ jobs:
 
           path.write_text("\n".join(output) + "\n")
           PY
-          rg -n 'CODE_SIGN|DEVELOPMENT_TEAM|PROVISIONING_PROFILE_SPECIFIER' src-tauri/gen/apple/app.xcodeproj/project.pbxproj
+          if command -v rg >/dev/null 2>&1; then
+            rg -n 'CODE_SIGN|DEVELOPMENT_TEAM|PROVISIONING_PROFILE_SPECIFIER' src-tauri/gen/apple/app.xcodeproj/project.pbxproj
+          else
+            grep -nE 'CODE_SIGN|DEVELOPMENT_TEAM|PROVISIONING_PROFILE_SPECIFIER' src-tauri/gen/apple/app.xcodeproj/project.pbxproj
+          fi
 
       - name: Build Windows x64
         if: matrix.target == 'windows'
