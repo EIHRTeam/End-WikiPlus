@@ -29,7 +29,7 @@ English version: [README_en-US.md](README_en-US.md)
 
 请至 [Release](https://github.com/EIHRTeam/End-WikiPlus/releases/latest) 页面下载该程序。
 
-该项目支持平台：Windows、Linux、Mac OS、Android、iOS。
+该项目支持平台：Windows、Linux、macOS、Android、iOS。
 
 ### 从源码构建
 
@@ -66,6 +66,8 @@ English version: [README_en-US.md](README_en-US.md)
 ## 鸣谢
 
 [AndreaFrederica](https://github.com/AndreaFrederica) 及 [TheJeiWebProject](https://github.com/TheJEIWebProject)
+
+[梦溪潇](https://github.com/mengxixiao)
 
 ## 技术栈
 
