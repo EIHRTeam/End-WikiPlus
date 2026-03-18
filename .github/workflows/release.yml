@@ -312,37 +312,17 @@ jobs:
         env:
           TAG_NAME: ${{ inputs.tag_name }}
         run: |
-          python3 -c "
-          import os
-          import re
-
-          tag_name = os.environ.get('TAG_NAME', '')
-          safe_tag = tag_name.replace('-', '--').replace('_', '__').replace(' ', '_')
-          new_badge_url = f'https://img.shields.io/badge/version-{safe_tag}-blue'
-
-          with open('README.md', 'r', encoding='utf-8') as f:
-              content = f.read()
-
-          pattern = r'https://img\\.shields\\.io/badge/version-[^?]+'
-          if re.search(pattern, content):
-              new_content = re.sub(pattern, new_badge_url, content)
-              with open('README.md', 'w', encoding='utf-8') as f:
-                  f.write(new_content)
-              print(f'Successfully updated badge to {safe_tag}')
-          else:
-              print('Badge pattern not found in README.md')
-              raise SystemExit(1)
-          "
+          python3 scripts/update_readme_version_badge.py "$TAG_NAME" README.md README_en-US.md
 
       - name: Commit and Push
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          if git diff --quiet README.md; then
-            echo "No changes in README.md"
+          if git diff --quiet README.md README_en-US.md; then
+            echo "No changes in README files"
           else
-            git add README.md
+            git add README.md README_en-US.md
             git commit -m "docs: update version badge to ${{ inputs.tag_name }}"
             git push origin ${{ github.ref_name }}
           fi

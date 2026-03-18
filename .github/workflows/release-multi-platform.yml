@@ -408,7 +408,7 @@ jobs:
           STATUS=$?
           echo "exit_code=$STATUS" >> "$GITHUB_OUTPUT"
           if [ "$STATUS" -ne 0 ]; then
-            echo "tauri ios build exited with status $STATUS; falling back to packaging any unsigned app bundle that was produced."
+            echo "tauri ios build exited with status $STATUS; checking whether a complete unsigned app bundle can still be packaged."
           fi
 
       - name: Prepare iOS Asset
@@ -439,6 +439,20 @@ jobs:
             )
           fi
           if [ -n "${APP_PATH:-}" ]; then
+            APP_INFO_PLIST="$APP_PATH/Info.plist"
+            if [ ! -f "$APP_INFO_PLIST" ]; then
+              echo "Incomplete iOS app bundle: missing $APP_INFO_PLIST"
+              find "$APP_PATH" -maxdepth 2 -print
+              exit 1
+            fi
+
+            APP_EXECUTABLE=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$APP_INFO_PLIST" 2>/dev/null || true)
+            if [ -z "${APP_EXECUTABLE:-}" ] || [ ! -f "$APP_PATH/$APP_EXECUTABLE" ]; then
+              echo "Incomplete iOS app bundle: missing executable ${APP_EXECUTABLE:-<unset>}"
+              find "$APP_PATH" -maxdepth 2 -print
+              exit 1
+            fi
+
             echo "Packaging unsigned app bundle from $APP_PATH"
             PACKAGE_DIR="$(mktemp -d)"
             mkdir -p "$PACKAGE_DIR/Payload"
@@ -471,8 +485,44 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload "${{ inputs.tag_name }}" "${{ steps.prepare_ios_asset.outputs.asset_path }}" --clobber
 
-  publish-release:
+  update-readme:
     needs: build-and-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Update README badge
+        env:
+          TAG_NAME: ${{ inputs.tag_name }}
+        run: |
+          python3 scripts/update_readme_version_badge.py "$TAG_NAME" README.md README_en-US.md
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet README.md README_en-US.md; then
+            echo "No changes in README files"
+          else
+            git add README.md README_en-US.md
+            git commit -m "docs: update version badge to ${{ inputs.tag_name }}"
+            git push origin ${{ github.ref_name }}
+          fi
+
+  publish-release:
+    needs:
+      - build-and-release
+      - update-readme
     runs-on: ubuntu-latest
     permissions:
       contents: write

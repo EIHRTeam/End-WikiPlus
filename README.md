@@ -1,13 +1,27 @@
+<!-- markdownlint-disable -->
+
+<div align="center">
+
+<img alt="LOGO" src="./src-tauri/icons/icon.png" width="256" height="256" />
+
 # Endfield Wikiplus
 
-![Version](https://img.shields.io/badge/version-0.2.1--alpha-blue?style=for-the-badge)<br>
-![Vue](https://img.shields.io/badge/Vue-3-%234FC08D?logo=vuedotjs)
-![Tauri](https://img.shields.io/badge/Tauri-v2-%2324C8D8?logo=tauri)
-![Quasar](https://img.shields.io/badge/Quasar-v2-%234695EB?logo=quasar) <br>
-一款跨平台的开源森空岛 Wiki 工具箱<br>
-A cross-platform, open-source toolbox for the SKLAND/SKPORT Endfield Wiki.
+<!-- markdownlint-restore -->
+
+<!-- version-badge:start -->
+![Version](https://img.shields.io/badge/version-0.2.2--alpha-blue?style=for-the-badge)<br><!-- version-badge:end -->
+![GitHub Repo stars](https://img.shields.io/github/stars/EIHRTeam/End-WikiPlus)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/EIHRTeam/End-WikiPlus/total?style=social)
+[![star](https://gitee.com/EIHRTeam/End-WikiPkus/badge/star.svg?theme=dark)](https://gitee.com/EIHRTeam/End-WikiPkus)<br>
+![Vue 3](https://img.shields.io/badge/Vue-3-%234FC08D?logo=vuedotjs)
+![Tauri v2](https://img.shields.io/badge/Tauri-v2-%2324C8D8?logo=tauri)
+![Quasar v2](https://img.shields.io/badge/Quasar-v2-%234695EB?logo=quasar)<br>
+A cross-platform, open-source toolbox for the SKLAND/SKPORT Endfield Wiki<br>
+一款跨平台的开源森空岛 Wiki 工具箱
 
 English version: [README_en-US.md](README_en-US.md)
+
+</div>
 
 ## 快速开始
 

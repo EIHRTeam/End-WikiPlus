@@ -65,9 +65,17 @@ item_info_*.json
 public/temp/
 temp/
 /tmp/
+EndWikiplus-*.apk
+EndWikiplus-*.deb
+EndWikiplus-*.dmg
+EndWikiplus-*.exe
+EndWikiplus-*.ipa
+*.xcdistributionlogs
+*.xcresult
 *.png
 !src/assets/**/*.png
 !src-tauri/icons/**/*.png
+!src-tauri/gen/apple/Assets.xcassets/**/*.png
 !src-tauri/gen/android/app/src/main/res/**/*.png
 !public/**/*.png
 src-tauri/icons/apple/
