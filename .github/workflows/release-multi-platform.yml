@@ -188,13 +188,6 @@ jobs:
           VERSION=$(node -p "require('./src-tauri/tauri.conf.json').version")
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Regenerate iOS project for CI
-        if: matrix.target == 'ios'
-        shell: bash
-        run: |
-          set -euo pipefail
-          pnpm tauri ios init --ci --skip-targets-install -c src-tauri/tauri.ios.conf.json
-
       - name: Sync iOS version from tauri.conf.json
         if: matrix.target == 'ios'
         shell: bash
@@ -259,6 +252,7 @@ jobs:
 
           path.write_text("\n".join(output) + "\n")
           PY
+          grep -nE 'objectVersion|compatibilityVersion|preferredProjectObjectVersion' src-tauri/gen/apple/app.xcodeproj/project.pbxproj || true
           if command -v rg >/dev/null 2>&1; then
             rg -n 'CODE_SIGN|DEVELOPMENT_TEAM|PROVISIONING_PROFILE_SPECIFIER' src-tauri/gen/apple/app.xcodeproj/project.pbxproj
           else
@@ -432,8 +426,8 @@ jobs:
           set -euo pipefail
           VERSION="${{ steps.get_version.outputs.VERSION }}"
           NEW_IPA="EndWikiplus-ios-unsigned-$VERSION.ipa"
-          BUILD_DIR="src-tauri/gen/apple/build/arm64"
-          OLD_IPA=$(find "$BUILD_DIR" -maxdepth 1 -type f -name "*.ipa" | head -n 1 || true)
+          SEARCH_ROOT="src-tauri/gen/apple"
+          OLD_IPA=$(find "$SEARCH_ROOT" -type f -name "*.ipa" | head -n 1 || true)
 
           if [ -n "${OLD_IPA:-}" ]; then
             mv "$OLD_IPA" "$NEW_IPA"
@@ -441,7 +435,7 @@ jobs:
             exit 0
           fi
 
-          APP_PATH=$(find "$BUILD_DIR" -maxdepth 2 -type d -name "*.app" | head -n 1 || true)
+          APP_PATH=$(find "$SEARCH_ROOT" -type d -name "*.app" | head -n 1 || true)
           if [ -n "${APP_PATH:-}" ]; then
             PACKAGE_DIR="$(mktemp -d)"
             mkdir -p "$PACKAGE_DIR/Payload"
@@ -455,9 +449,9 @@ jobs:
             exit 0
           fi
 
-          echo "No .ipa or .app found under $BUILD_DIR"
+          echo "No .ipa or .app found under $SEARCH_ROOT"
           echo "tauri ios build exit code: ${{ steps.build_ios.outputs.exit_code }}"
-          find src-tauri/gen/apple/build -maxdepth 4 \( -type f -name "*.ipa" -o -type d -name "*.app" \) -print || true
+          find "$SEARCH_ROOT" \( -type f -name "*.ipa" -o -type d -name "*.app" \) -print || true
           exit 1
 
       - name: Upload iOS Artifact
