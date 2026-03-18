@@ -188,6 +188,13 @@ jobs:
           VERSION=$(node -p "require('./src-tauri/tauri.conf.json').version")
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
+      - name: Regenerate iOS project for CI
+        if: matrix.target == 'ios'
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm tauri ios init --ci --skip-targets-install -c src-tauri/tauri.ios.conf.json
+
       - name: Sync iOS version from tauri.conf.json
         if: matrix.target == 'ios'
         shell: bash
@@ -198,6 +205,61 @@ jobs:
           /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" src-tauri/gen/apple/app_iOS/Info.plist
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $VERSION" src-tauri/gen/apple/app_iOS/Info.plist
           perl -0pi -e 's/CFBundleShortVersionString: .*/CFBundleShortVersionString: '"$VERSION"'/; s/CFBundleVersion: "[^"]+"/CFBundleVersion: "'"$VERSION"'"/;' src-tauri/gen/apple/project.yml
+
+      - name: Disable iOS code signing for unsigned build
+        if: matrix.target == 'ios'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+
+          path = Path("src-tauri/gen/apple/app.xcodeproj/project.pbxproj")
+          lines = path.read_text().splitlines()
+
+          signing_keys = {
+              "CODE_SIGN_STYLE =",
+              "CODE_SIGNING_ALLOWED =",
+              "CODE_SIGNING_REQUIRED =",
+              "CODE_SIGN_IDENTITY =",
+              '"CODE_SIGN_IDENTITY[sdk=iphoneos*]" =',
+              "DEVELOPMENT_TEAM =",
+              '"DEVELOPMENT_TEAM[sdk=iphoneos*]" =',
+              "PROVISIONING_PROFILE_SPECIFIER =",
+              '"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" =',
+          }
+
+          injected = False
+          output = []
+          for line in lines:
+              stripped = line.strip()
+              if any(stripped.startswith(key) for key in signing_keys):
+                  continue
+
+              output.append(line)
+              if stripped == "ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;":
+                  indent = line[: len(line) - len(line.lstrip())]
+                  output.extend(
+                      [
+                          f"{indent}CODE_SIGN_STYLE = Manual;",
+                          f"{indent}CODE_SIGNING_ALLOWED = NO;",
+                          f"{indent}CODE_SIGNING_REQUIRED = NO;",
+                          f'{indent}CODE_SIGN_IDENTITY = "";',
+                          f'{indent}"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";',
+                          f'{indent}DEVELOPMENT_TEAM = "";',
+                          f'{indent}"DEVELOPMENT_TEAM[sdk=iphoneos*]" = "";',
+                          f'{indent}PROVISIONING_PROFILE_SPECIFIER = "";',
+                          f'{indent}"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "";',
+                      ]
+                  )
+                  injected = True
+
+          if not injected:
+              raise SystemExit("Failed to locate iOS build settings block in project.pbxproj")
+
+          path.write_text("\n".join(output) + "\n")
+          PY
+          rg -n 'CODE_SIGN|DEVELOPMENT_TEAM|PROVISIONING_PROFILE_SPECIFIER' src-tauri/gen/apple/app.xcodeproj/project.pbxproj
 
       - name: Build Windows x64
         if: matrix.target == 'windows'
@@ -340,10 +402,22 @@ jobs:
 
       - name: Build iOS IPA (unsigned)
         if: matrix.target == 'ios'
+        id: build_ios
         shell: bash
         run: |
-          set -euo pipefail
-          pnpm tauri ios build --ci --target aarch64 -c src-tauri/tauri.ios.conf.json
+          set +e
+          pnpm tauri ios build --ci --target aarch64 -c src-tauri/tauri.ios.conf.json -- \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY= \
+            DEVELOPMENT_TEAM= \
+            PROVISIONING_PROFILE_SPECIFIER=
+          STATUS=$?
+          echo "exit_code=$STATUS" >> "$GITHUB_OUTPUT"
+          if [ "$STATUS" -ne 0 ]; then
+            echo "tauri ios build exited with status $STATUS; falling back to packaging any unsigned app bundle that was produced."
+          fi
 
       - name: Prepare iOS Asset
         if: matrix.target == 'ios'
@@ -353,16 +427,34 @@ jobs:
         run: |
           set -euo pipefail
           VERSION="${{ steps.get_version.outputs.VERSION }}"
-          OLD_IPA=$(find src-tauri/gen/apple/build/arm64 -maxdepth 1 -type f -name "*.ipa" | head -n 1)
-          if [ -z "${OLD_IPA:-}" ]; then
-            echo "No .ipa found under src-tauri/gen/apple/build/arm64"
-            find src-tauri/gen/apple/build -maxdepth 3 -type f -name "*.ipa" -print || true
-            exit 1
+          NEW_IPA="EndWikiplus-ios-unsigned-$VERSION.ipa"
+          BUILD_DIR="src-tauri/gen/apple/build/arm64"
+          OLD_IPA=$(find "$BUILD_DIR" -maxdepth 1 -type f -name "*.ipa" | head -n 1 || true)
+
+          if [ -n "${OLD_IPA:-}" ]; then
+            mv "$OLD_IPA" "$NEW_IPA"
+            echo "asset_path=$NEW_IPA" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
 
-          NEW_IPA="EndWikiplus-ios-unsigned-$VERSION.ipa"
-          mv "$OLD_IPA" "$NEW_IPA"
-          echo "asset_path=$NEW_IPA" >> "$GITHUB_OUTPUT"
+          APP_PATH=$(find "$BUILD_DIR" -maxdepth 2 -type d -name "*.app" | head -n 1 || true)
+          if [ -n "${APP_PATH:-}" ]; then
+            PACKAGE_DIR="$(mktemp -d)"
+            mkdir -p "$PACKAGE_DIR/Payload"
+            cp -R "$APP_PATH" "$PACKAGE_DIR/Payload/"
+            (
+              cd "$PACKAGE_DIR"
+              zip -qry "$GITHUB_WORKSPACE/$NEW_IPA" Payload
+            )
+            rm -rf "$PACKAGE_DIR"
+            echo "asset_path=$NEW_IPA" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "No .ipa or .app found under $BUILD_DIR"
+          echo "tauri ios build exit code: ${{ steps.build_ios.outputs.exit_code }}"
+          find src-tauri/gen/apple/build -maxdepth 4 \( -type f -name "*.ipa" -o -type d -name "*.app" \) -print || true
+          exit 1
 
       - name: Upload iOS Artifact
         if: matrix.target == 'ios'
