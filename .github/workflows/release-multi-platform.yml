@@ -343,18 +343,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          DERIVED_DATA="$RUNNER_TEMP/ios-derived"
-          xcodebuild \
-            -project src-tauri/gen/apple/app.xcodeproj \
-            -scheme app_iOS \
-            -configuration release \
-            -sdk iphoneos \
-            -destination "generic/platform=iOS" \
-            -derivedDataPath "$DERIVED_DATA" \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
-            build
+          pnpm tauri ios build --ci --target aarch64 -c src-tauri/tauri.ios.conf.json
 
       - name: Prepare iOS Asset
         if: matrix.target == 'ios'
@@ -364,24 +353,15 @@ jobs:
         run: |
           set -euo pipefail
           VERSION="${{ steps.get_version.outputs.VERSION }}"
-          DERIVED_DATA="$RUNNER_TEMP/ios-derived"
-          APP_PATH=$(find "$DERIVED_DATA/Build/Products/release-iphoneos" -maxdepth 1 -type d -name "*.app" | head -n 1)
-          if [ -z "${APP_PATH:-}" ]; then
-            echo "No .app found in $DERIVED_DATA/Build/Products/release-iphoneos"
-            ls -la "$DERIVED_DATA/Build/Products" || true
+          OLD_IPA=$(find src-tauri/gen/apple/build/arm64 -maxdepth 1 -type f -name "*.ipa" | head -n 1)
+          if [ -z "${OLD_IPA:-}" ]; then
+            echo "No .ipa found under src-tauri/gen/apple/build/arm64"
+            find src-tauri/gen/apple/build -maxdepth 3 -type f -name "*.ipa" -print || true
             exit 1
           fi
 
-          PAYLOAD_DIR="$RUNNER_TEMP/Payload"
-          rm -rf "$PAYLOAD_DIR"
-          mkdir -p "$PAYLOAD_DIR"
-          cp -R "$APP_PATH" "$PAYLOAD_DIR/"
-
           NEW_IPA="EndWikiplus-ios-unsigned-$VERSION.ipa"
-          (
-            cd "$RUNNER_TEMP"
-            zip -qry "$GITHUB_WORKSPACE/$NEW_IPA" Payload
-          )
+          mv "$OLD_IPA" "$NEW_IPA"
           echo "asset_path=$NEW_IPA" >> "$GITHUB_OUTPUT"
 
       - name: Upload iOS Artifact
