@@ -58,9 +58,9 @@ jobs:
           git tag "$TAG_NAME"
           git push origin "$TAG_NAME"
 
-          # IMPORTANT: Re-create the Release so later jobs can upload assets
-          echo "Creating GitHub Release $TAG_NAME ..."
-          gh release create "$TAG_NAME" --title "$TAG_NAME" --notes ""
+          # IMPORTANT: Re-create the draft Release so later jobs can upload assets
+          echo "Creating draft GitHub Release $TAG_NAME ..."
+          gh release create "$TAG_NAME" --title "$TAG_NAME" --notes "" --draft
 
   build-and-release:
     needs: create-tag
@@ -346,3 +346,19 @@ jobs:
             git commit -m "docs: update version badge to ${{ inputs.tag_name }}"
             git push origin ${{ github.ref_name }}
           fi
+
+  publish-release:
+    needs:
+      - build-and-release
+      - update-readme
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ inputs.tag_name }}
+        run: |
+          set -euo pipefail
+          gh release edit "$TAG_NAME" --draft=false

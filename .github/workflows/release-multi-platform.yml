@@ -54,8 +54,8 @@ jobs:
           git tag "$TAG_NAME"
           git push origin "$TAG_NAME"
 
-          echo "Creating GitHub Release $TAG_NAME ..."
-          gh release create "$TAG_NAME" --title "$TAG_NAME" --notes ""
+          echo "Creating draft GitHub Release $TAG_NAME ..."
+          gh release create "$TAG_NAME" --title "$TAG_NAME" --notes "" --draft
 
   build-and-release:
     needs: create-tag
@@ -188,6 +188,17 @@ jobs:
           VERSION=$(node -p "require('./src-tauri/tauri.conf.json').version")
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
+      - name: Sync iOS version from tauri.conf.json
+        if: matrix.target == 'ios'
+        shell: bash
+        env:
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
+        run: |
+          set -euo pipefail
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" src-tauri/gen/apple/app_iOS/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $VERSION" src-tauri/gen/apple/app_iOS/Info.plist
+          perl -0pi -e 's/CFBundleShortVersionString: .*/CFBundleShortVersionString: '"$VERSION"'/; s/CFBundleVersion: "[^"]+"/CFBundleVersion: "'"$VERSION"'"/;' src-tauri/gen/apple/project.yml
+
       - name: Build Windows x64
         if: matrix.target == 'windows'
         run: pnpm tauri build --target x86_64-pc-windows-msvc
@@ -296,9 +307,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload "${{ inputs.tag_name }}" "${{ steps.prepare_android_asset.outputs.asset_path }}" --clobber
 
-      - name: Build macOS DMG (Apple Silicon)
+      - name: Build macOS DMG (unsigned, Apple Silicon)
         if: matrix.target == 'macos'
-        run: pnpm tauri build --target aarch64-apple-darwin --bundles dmg
+        run: pnpm tauri build --target aarch64-apple-darwin --bundles dmg --no-sign
 
       - name: Prepare macOS Asset
         if: matrix.target == 'macos'
@@ -309,7 +320,7 @@ jobs:
           set -euo pipefail
           VERSION="${{ steps.get_version.outputs.VERSION }}"
           OLD_DMG=$(ls src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg | head -n 1)
-          NEW_DMG="EndWikiplus-macos-arm64-$VERSION.dmg"
+          NEW_DMG="EndWikiplus-macos-arm64-unsigned-$VERSION.dmg"
           mv "$OLD_DMG" "$NEW_DMG"
           echo "asset_path=$NEW_DMG" >> "$GITHUB_OUTPUT"
 
@@ -317,7 +328,7 @@ jobs:
         if: matrix.target == 'macos'
         uses: actions/upload-artifact@v7
         with:
-          name: release-macos-${{ steps.get_version.outputs.VERSION }}
+          name: release-macos-unsigned-${{ steps.get_version.outputs.VERSION }}
           path: ${{ steps.prepare_macos_asset.outputs.asset_path }}
           if-no-files-found: error
 
@@ -377,7 +388,7 @@ jobs:
         if: matrix.target == 'ios'
         uses: actions/upload-artifact@v7
         with:
-          name: release-ios-${{ steps.get_version.outputs.VERSION }}
+          name: release-ios-unsigned-${{ steps.get_version.outputs.VERSION }}
           path: ${{ steps.prepare_ios_asset.outputs.asset_path }}
           if-no-files-found: error
 
@@ -386,3 +397,17 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload "${{ inputs.tag_name }}" "${{ steps.prepare_ios_asset.outputs.asset_path }}" --clobber
+
+  publish-release:
+    needs: build-and-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ inputs.tag_name }}
+        run: |
+          set -euo pipefail
+          gh release edit "$TAG_NAME" --draft=false
