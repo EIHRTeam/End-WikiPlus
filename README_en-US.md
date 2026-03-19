@@ -64,7 +64,8 @@ Supported platforms: Windows, Linux, macOS, Android, and iOS.
 
 ## Credits
 
-[AndreaFrederica](https://github.com/AndreaFrederica) and [TheJeiWebProject](https://github.com/TheJEIWebProject)
+- [AndreaFrederica](https://github.com/AndreaFrederica) and [TheJeiWebProject](https://github.com/TheJEIWebProject)
+- [mengxixiao](https://github.com/mengxixiao)
 
 ## Tech Stack
 
