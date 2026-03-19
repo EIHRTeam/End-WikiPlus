@@ -60,7 +60,7 @@ jobs:
 
           # IMPORTANT: Re-create the draft Release so later jobs can upload assets
           echo "Creating draft GitHub Release $TAG_NAME ..."
-          gh release create "$TAG_NAME" --title "$TAG_NAME" --notes "" --draft
+          gh release create "$TAG_NAME" --title "$TAG_NAME" --notes-file .github/workflows/release.md --draft
 
   build-and-release:
     needs: create-tag
