@@ -14,8 +14,10 @@
 
 #### iOS
 
-笔者由于预算有限，被[苹果开发者计划](https://developer.apple.com/programs/)的 $99/年 门槛费判定为不合格😭😭😭，无力将该 App 上架 App Store，故仅能在此提供 **未经签名** 的 IPA 软件包，还请见谅。
-关于未签名 IPA 包的安装方法，请参考：[爱思助手 IPA 签名教程](https://www.i4.cn/news_detail_38195.html)
+由于预算有限，笔者被[苹果开发者计划](https://developer.apple.com/programs/)的 $99/年 门槛费判定为不合格，无力将该 App 上架 App Store，故仅能在此提供 **未经签名** 的 IPA 软件包，还请见谅。
+关于未签名 IPA 包的安装方法，请：
+- 使用 [AltStore Classic](https://altstore.io/#Downloads) 或 [Sideloadly](https://sideloadly.io/#download) 安装
+- 亦可参考[爱思助手 IPA 签名教程](https://www.i4.cn/news_detail_38195.html)
 
 #### macOS
 
@@ -25,4 +27,4 @@
 ## 尾注
 
 如遇软件 bug ，欢迎来发 [Issue](https://github.com/EIHRTeam/End-WikiPlus/issues) 找茬。
-若有富哥愿意伸出援手，烦请电邮 [staff@eihrteam.org](mailto:staff@eihrteam.org)，不胜感激。
+若有意合作，请电邮联系 [staff@eihrteam.org](mailto:staff@eihrteam.org)。
