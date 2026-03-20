@@ -9,7 +9,7 @@
 <!-- markdownlint-restore -->
 
 <!-- version-badge:start -->
-![Version](https://img.shields.io/badge/version-0.2.2--alpha-blue?style=for-the-badge)<br><!-- version-badge:end -->
+![Version](https://img.shields.io/badge/version-0.2.3--alpha-blue?style=for-the-badge)<br><!-- version-badge:end -->
 ![GitHub Repo stars](https://img.shields.io/github/stars/EIHRTeam/End-WikiPlus)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/EIHRTeam/End-WikiPlus/total?style=social)
 [![star](https://gitee.com/EIHRTeam/End-WikiPkus/badge/star.svg?theme=dark)](https://gitee.com/EIHRTeam/End-WikiPkus)<br>
