@@ -1,4 +1,7 @@
 *.iml
+# This directory intentionally keeps the Android project itself under version
+# control. Only transient local build state and disposable regeneration output
+# stay ignored here.
 .gradle
 /local.properties
 /.idea/caches

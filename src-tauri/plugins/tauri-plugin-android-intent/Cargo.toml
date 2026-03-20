@@ -11,10 +11,10 @@ description = "A Tauri plugin to open external links on Android using native Int
 repository = "https://github.com/EIHRTeam/end-wikiplus-app"
 
 [dependencies]
-tauri = { version = "2.10.0" }
+tauri = { version = "2.10.3" }
 serde = "1.0"
 log = "0.4"
 thiserror = "1.0"
 
 [build-dependencies]
-tauri-plugin = { version = "2.5.3", features = ["build"] }
+tauri-plugin = { version = "2.5.4", features = ["build"] }

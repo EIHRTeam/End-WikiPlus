@@ -14,6 +14,8 @@ node_modules
 
 # Tauri / Rust related
 src-tauri/target
+# Disposable schema output. Maintained generated mobile projects live under
+# src-tauri/gen/android and src-tauri/gen/apple.
 src-tauri/gen/schemas
 src-tauri/plugins/*/android/build/
 src-tauri/plugins/*/android/.tauri/
@@ -49,6 +51,8 @@ build_log.txt
 !.env.example
 *.keystore
 *.jks
+# Root build-android helpers are local-only convenience scripts and are not part
+# of the tracked repository structure contract.
 build-android.ps1
 build-android.sh
 
