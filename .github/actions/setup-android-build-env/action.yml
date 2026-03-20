@@ -68,7 +68,11 @@ runs:
         rm -f cmdline-tools.zip
         rm -rf "$HOME/android-sdk/cmdline-tools/latest"
         mv "$HOME/android-sdk/cmdline-tools/cmdline-tools" "$HOME/android-sdk/cmdline-tools/latest"
+        # sdkmanager exits once all prompts are answered, which leaves `yes`
+        # with SIGPIPE; disable pipefail so that only sdkmanager decides success.
+        set +o pipefail
         yes | "$HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$HOME/android-sdk" --licenses
+        set -o pipefail
         "$HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager" \
           --sdk_root="$HOME/android-sdk" \
           "platform-tools" \
