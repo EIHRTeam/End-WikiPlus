@@ -18,7 +18,7 @@
 ![Quasar v2](https://img.shields.io/badge/Quasar-v2-%234695EB?logo=quasar)<br>
 A cross-platform, open-source toolbox for the SKLAND/SKPORT Endfield Wiki.
 
-简体中文: [README.md](README_.md)
+简体中文: [README.md](README.md)
 
 </div>
 
