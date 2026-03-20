@@ -1,6 +1,5 @@
 use objc2_app_kit::{
-  NSAlternateKeyMask, NSCommandKeyMask, NSControlKeyMask, NSEvent, NSEventType, NSShiftKeyMask,
-  NSView,
+  NSEvent, NSEventModifierFlags, NSEventType, NSView,
 };
 use objc2_foundation::NSString;
 
@@ -113,10 +112,10 @@ unsafe fn create_js_mouse_event(
     x = x,
     y = y,
     detail = event.clickCount(),
-    ctrl_key = mods_flags.contains(NSControlKeyMask),
-    alt_key = mods_flags.contains(NSAlternateKeyMask),
-    shift_key = mods_flags.contains(NSShiftKeyMask),
-    meta_key = mods_flags.contains(NSCommandKeyMask),
+    ctrl_key = mods_flags.contains(NSEventModifierFlags::Control),
+    alt_key = mods_flags.contains(NSEventModifierFlags::Option),
+    shift_key = mods_flags.contains(NSEventModifierFlags::Shift),
+    meta_key = mods_flags.contains(NSEventModifierFlags::Command),
     button = button,
     buttons = buttons,
   )
