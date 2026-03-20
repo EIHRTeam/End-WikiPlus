@@ -12,7 +12,7 @@
 ![Version](https://img.shields.io/badge/version-0.2.3--alpha-blue?style=for-the-badge)<br><!-- version-badge:end -->
 ![GitHub Repo stars](https://img.shields.io/github/stars/EIHRTeam/End-WikiPlus)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/EIHRTeam/End-WikiPlus/total?style=social)
-[![star](https://gitee.com/EIHRTeam/End-WikiPkus/badge/star.svg?theme=dark)](https://gitee.com/EIHRTeam/End-WikiPkus)<br>
+[![star](https://gitee.com/EIHRTeam/End-WikiPlus/badge/star.svg?theme=dark)](https://gitee.com/EIHRTeam/End-WikiPkus)<br>
 ![Vue 3](https://img.shields.io/badge/Vue-3-%234FC08D?logo=vuedotjs)
 ![Tauri v2](https://img.shields.io/badge/Tauri-v2-%2324C8D8?logo=tauri)
 ![Quasar v2](https://img.shields.io/badge/Quasar-v2-%234695EB?logo=quasar)<br>
