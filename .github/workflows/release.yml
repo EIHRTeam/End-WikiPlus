@@ -1,4 +1,5 @@
 name: Release Build
+run-name: Release Build ${{ inputs.tag_name }}
 
 on:
   workflow_dispatch:
@@ -7,6 +8,10 @@ on:
         description: "Tag name (e.g. 1.0.0, 1.0.0-alpha, 1.0.0-rc1)  (no leading 'v')"
         required: true
         type: string
+
+concurrency:
+  group: release-build-${{ github.workflow }}-${{ inputs.tag_name }}
+  cancel-in-progress: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
@@ -110,6 +115,8 @@ jobs:
       - name: Setup Android build environment
         if: matrix.target == 'android'
         uses: ./.github/actions/setup-android-build-env
+        with:
+          gradle-cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable

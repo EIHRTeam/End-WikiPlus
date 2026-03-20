@@ -22,6 +22,10 @@ inputs:
     description: Android NDK version to install.
     required: false
     default: "29.0.14206865"
+  gradle-cache-encryption-key:
+    description: Optional Gradle cache encryption key used to persist configuration-cache state safely.
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -34,11 +38,23 @@ runs:
         distribution: ${{ inputs.java-distribution }}
         java-version: ${{ inputs.java-version }}
 
-    - name: Validate Gradle wrapper
-      uses: gradle/actions/wrapper-validation@v5
-
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v5
+      with:
+        # Release workflows are manually dispatched and often run from a
+        # long-lived release branch, so allow them to refresh the shared
+        # Gradle cache instead of staying read-only off the default branch.
+        cache-read-only: false
+        # If the repository defines GRADLE_ENCRYPTION_KEY, setup-gradle can
+        # safely persist the configuration-cache enabled in gradle.properties.
+        cache-encryption-key: ${{ inputs.gradle-cache-encryption-key }}
+
+    - name: Verify Java and Gradle wrapper versions
+      shell: bash
+      run: |
+        set -euo pipefail
+        java -version
+        ./src-tauri/gen/android/gradlew --version
 
     - name: Install Android dependencies
       shell: bash
