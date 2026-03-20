@@ -1,4 +1,5 @@
 name: Release Build Multi Platform
+run-name: Release Build Multi Platform ${{ inputs.tag_name }}
 
 on:
   workflow_dispatch:
@@ -7,6 +8,10 @@ on:
         description: "Tag name (e.g. 1.0.0, 1.0.0-alpha, 1.0.0-rc1) (no leading 'v')"
         required: true
         type: string
+
+concurrency:
+  group: release-build-${{ github.workflow }}-${{ inputs.tag_name }}
+  cancel-in-progress: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
@@ -110,13 +115,12 @@ jobs:
             ${{ runner.os }}-pnpm-${{ matrix.target }}-
             ${{ runner.os }}-pnpm-
 
-      - name: Setup Java 17
+      # Android CI toolchain setup is centralized in .github/actions.
+      - name: Setup Android build environment
         if: matrix.target == 'android'
-        uses: actions/setup-java@v5
+        uses: ./.github/actions/setup-android-build-env
         with:
-          distribution: temurin
-          java-version: '17'
-          cache: gradle
+          gradle-cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -139,27 +143,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-
-      - name: Install Android dependencies
-        if: matrix.target == 'android'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y unzip
-          wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
-          mkdir -p "$HOME/android-sdk/cmdline-tools"
-          unzip -q cmdline-tools.zip -d "$HOME/android-sdk/cmdline-tools"
-          mv "$HOME/android-sdk/cmdline-tools/cmdline-tools" "$HOME/android-sdk/cmdline-tools/latest"
-          yes | "$HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$HOME/android-sdk" --licenses
-          "$HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$HOME/android-sdk" "platform-tools" "platforms;android-34" "build-tools;34.0.0" "ndk;29.0.14206865"
-
-      - name: Set up Android env
-        if: matrix.target == 'android'
-        run: |
-          echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> "$GITHUB_ENV"
-          echo "ANDROID_HOME=$HOME/android-sdk" >> "$GITHUB_ENV"
-          echo "$HOME/android-sdk/platform-tools" >> "$GITHUB_PATH"
-          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
-          echo "NDK_HOME=$HOME/android-sdk/ndk/29.0.14206865" >> "$GITHUB_ENV"
 
       - name: Install Frontend Dependencies
         run: pnpm install --frozen-lockfile --prefer-offline

@@ -15,13 +15,13 @@ name = "app_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2.5.4", features = [] }
+tauri-build = { version = "2.5.6", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
-tauri = { version = "2.10.0", features = [] }
+tauri = { version = "2.10.3", features = [] }
 tauri-plugin-log = "2"
 tauri-plugin-fs = "2.4.5"
 tauri-plugin-http = "2.5.7"
@@ -45,3 +45,8 @@ flate2 = { version = "1.0.30", features = ["miniz_oxide"], default-features = fa
 base64 = "0.22.1"
 block-padding = "0.3.3"
 tauri-plugin-notification = "2"
+
+[patch.crates-io]
+# Android template fixes for generated WebView/activity Kotlin sources start in
+# vendor/rust/wry, then flow into src-tauri/gen/android during build generation.
+wry = { path = "vendor/rust/wry" }

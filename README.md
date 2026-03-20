@@ -23,6 +23,12 @@ English version: [README_en-US.md](README_en-US.md)
 
 </div>
 
+## 项目结构说明
+
+- 仓库结构与移动端源码归属见 [docs/project-structure.md](docs/project-structure.md)
+- Android 维护项目说明见 [src-tauri/gen/android/README.md](src-tauri/gen/android/README.md)
+- Vendored 依赖说明见 [src-tauri/vendor/README.md](src-tauri/vendor/README.md)
+
 ## 快速开始
 
 ### 下载与使用

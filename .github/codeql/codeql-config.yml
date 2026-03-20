@@ -1,0 +1,4 @@
+paths-ignore:
+  # Vendored third-party sources are maintained as upstream mirrors and are not
+  # the application's primary code surface for CodeQL review.
+  - src-tauri/vendor/**

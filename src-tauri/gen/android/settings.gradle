@@ -1,3 +1,40 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
+pluginManagement {
+    plugins {
+        id("com.android.application") version "9.1.0"
+        id("com.android.library") version "9.1.0"
+    }
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 include ':app'
 
 apply from: 'tauri.settings.gradle'
+
+// Keep vendored and local plugin paths workspace-relative so regenerated
+// tauri.settings.gradle cannot pin this build to cargo cache or a stale
+// checkout. The vendored Android modules under ../../vendor/android are the
+// maintenance source of truth for these included projects.
+project(':tauri-android').projectDir =
+    new File(settingsDir, '../../vendor/android/tauri-android').canonicalFile
+project(':tauri-plugin-fs').projectDir =
+    new File(settingsDir, '../../vendor/android/tauri-plugin-fs').canonicalFile
+project(':tauri-plugin-notification').projectDir =
+    new File(settingsDir, '../../vendor/android/tauri-plugin-notification').canonicalFile
+project(':tauri-plugin-shell').projectDir =
+    new File(settingsDir, '../../vendor/android/tauri-plugin-shell').canonicalFile
+project(':tauri-plugin-android-intent').projectDir =
+    new File(settingsDir, '../../plugins/tauri-plugin-android-intent/android').canonicalFile

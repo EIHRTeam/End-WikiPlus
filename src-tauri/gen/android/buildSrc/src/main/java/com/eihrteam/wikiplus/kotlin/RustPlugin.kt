@@ -1,9 +1,8 @@
 import com.android.build.api.dsl.ApplicationExtension
-import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.register
 
 const val TASK_GROUP = "rust"
 
@@ -17,10 +16,10 @@ open class RustPlugin : Plugin<Project> {
     override fun apply(project: Project) = with(project) {
         config = extensions.create("rust", Config::class.java)
 
-        val defaultAbiList = listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64");
+        val defaultAbiList = listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
         val abiList = (findProperty("abiList") as? String)?.split(',') ?: defaultAbiList
 
-        val defaultArchList = listOf("arm64", "arm", "x86", "x86_64");
+        val defaultArchList = listOf("arm64", "arm", "x86", "x86_64")
         val archList = (findProperty("archList") as? String)?.split(',') ?: defaultArchList
 
         val targetsList = (findProperty("targetList") as? String)?.split(',') ?: listOf("aarch64", "armv7", "i686", "x86_64")
@@ -49,35 +48,34 @@ open class RustPlugin : Plugin<Project> {
         afterEvaluate {
             for (profile in listOf("debug", "release")) {
                 val profileCapitalized = profile.replaceFirstChar { it.uppercase() }
-                val buildTask = tasks.maybeCreate(
-                    "rustBuildUniversal$profileCapitalized",
-                    DefaultTask::class.java
-                ).apply {
+                val buildTask = tasks.register("rustBuildUniversal$profileCapitalized") {
                     group = TASK_GROUP
                     description = "Build dynamic library in $profile mode for all targets"
                 }
 
-                tasks["mergeUniversal${profileCapitalized}JniLibFolders"].dependsOn(buildTask)
+                tasks.named("mergeUniversal${profileCapitalized}JniLibFolders").configure {
+                    dependsOn(buildTask)
+                }
 
                 for (targetPair in targetsList.withIndex()) {
                     val targetName = targetPair.value
                     val targetArch = archList[targetPair.index]
                     val targetArchCapitalized = targetArch.replaceFirstChar { it.uppercase() }
-                    val targetBuildTask = project.tasks.maybeCreate(
-                        "rustBuild$targetArchCapitalized$profileCapitalized",
-                        BuildTask::class.java
-                    ).apply {
+                    val targetBuildTask = tasks.register<BuildTask>("rustBuild$targetArchCapitalized$profileCapitalized") {
                         group = TASK_GROUP
                         description = "Build dynamic library in $profile mode for $targetArch"
-                        rootDirRel = config.rootDirRel
-                        target = targetName
-                        release = profile == "release"
+                        workingDirPath.set(project.layout.projectDirectory.dir(config.rootDirRel).asFile.absolutePath)
+                        target.set(targetName)
+                        release.set(profile == "release")
                     }
 
-                    buildTask.dependsOn(targetBuildTask)
-                    tasks["merge$targetArchCapitalized${profileCapitalized}JniLibFolders"].dependsOn(
-                        targetBuildTask
-                    )
+                    buildTask.configure {
+                        dependsOn(targetBuildTask)
+                    }
+
+                    tasks.named("merge$targetArchCapitalized${profileCapitalized}JniLibFolders").configure {
+                        dependsOn(targetBuildTask)
+                    }
                 }
             }
         }

@@ -31,7 +31,7 @@ abstract class WryActivity : AppCompatActivity() {
                         this@WryActivity.mWebView.goBack()
                     } else {
                         this.isEnabled = false
-                        this@WryActivity.onBackPressed()
+                        this@WryActivity.onBackPressedDispatcher.onBackPressed()
                         this.isEnabled = true
                     }
                 }

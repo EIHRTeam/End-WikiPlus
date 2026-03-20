@@ -2,7 +2,6 @@ import java.util.Properties
 
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
     id("rust")
 }
 
@@ -16,6 +15,15 @@ val tauriProperties = Properties().apply {
 android {
     compileSdk = 36
     namespace = "com.eihrteam.wikiplus.pub"
+    val keystorePathEnv = System.getenv("TAURI_ANDROID_KEYSTORE_PATH")
+    val keystorePasswordEnv = System.getenv("TAURI_ANDROID_KEYSTORE_PASSWORD")
+    val keyAliasEnv = System.getenv("TAURI_ANDROID_KEY_ALIAS")
+    val keyPasswordEnv = System.getenv("TAURI_ANDROID_KEY_PASSWORD")
+    val hasReleaseSigning =
+        keystorePathEnv != null &&
+            keystorePasswordEnv != null &&
+            keyAliasEnv != null &&
+            keyPasswordEnv != null
     defaultConfig {
         manifestPlaceholders["usesCleartextTraffic"] = "false"
         applicationId = "com.eihrteam.wikiplus.pub"
@@ -39,12 +47,7 @@ android {
         val signingConfigName = "release"
         signingConfigs {
             create(signingConfigName) {
-                val keystorePathEnv = System.getenv("TAURI_ANDROID_KEYSTORE_PATH")
-                val keystorePasswordEnv = System.getenv("TAURI_ANDROID_KEYSTORE_PASSWORD")
-                val keyAliasEnv = System.getenv("TAURI_ANDROID_KEY_ALIAS")
-                val keyPasswordEnv = System.getenv("TAURI_ANDROID_KEY_PASSWORD")
-
-                if (keystorePathEnv != null && keystorePasswordEnv != null && keyAliasEnv != null && keyPasswordEnv != null) {
+                if (hasReleaseSigning) {
                     storeFile = file(keystorePathEnv)
                     storePassword = keystorePasswordEnv
                     keyAlias = keyAliasEnv
@@ -55,7 +58,12 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName(signingConfigName)
+            signingConfig =
+                if (hasReleaseSigning) {
+                    signingConfigs.getByName(signingConfigName)
+                } else {
+                    signingConfigs.getByName("debug")
+                }
             proguardFiles(
                 *fileTree(".") { include("**/*.pro") }
                     .plus(getDefaultProguardFile("proguard-android-optimize.txt"))
@@ -63,11 +71,11 @@ android {
             )
         }
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
     buildFeatures {
         buildConfig = true
+    }
+    lint {
+        checkReleaseBuilds = false
     }
 }
 
