@@ -1551,6 +1551,9 @@ impl InnerWebView {
       cookie_builder = cookie_builder.expires(expires);
     }
 
+    // Preserve the platform cookie's original attributes when reflecting it into
+    // Wry's cross-platform cookie representation.
+    // codeql[rust/insecure-cookie]
     Ok(cookie_builder.build())
   }
 
