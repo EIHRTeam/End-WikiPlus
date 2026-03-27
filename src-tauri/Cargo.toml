@@ -36,7 +36,7 @@ md-5 = "0.10.6"
 hex = "0.4.3"
 tauri-plugin-android-intent = { path = "plugins/tauri-plugin-android-intent" }
 uuid = { version = "1.10.0", features = ["v4", "fast-rng"] }
-rsa = "0.9.6"
+num-bigint-dig = "0.8.6"
 rand = "0.8.5"
 des = "0.8.1"
 aes = "0.8.4"

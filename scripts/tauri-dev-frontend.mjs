@@ -3,6 +3,7 @@ import net from 'node:net';
 
 const HOST = '127.0.0.1';
 const PORT = 9000;
+const isMac = process.platform === 'darwin';
 const pnpmCommand = process.platform === 'win32' ? (process.env.ComSpec ?? 'cmd.exe') : 'pnpm';
 const pnpmArgs =
   process.platform === 'win32'
@@ -37,6 +38,10 @@ const child = spawn(pnpmCommand, pnpmArgs, {
   env: {
     ...process.env,
     TAURI_DEV: '1',
+    // Tauri dev for this mixed frontend/native repo can exceed macOS fs.watch
+    // limits. Polling is slower but avoids EMFILE crashes in the Quasar watcher.
+    CHOKIDAR_USEPOLLING: process.env.CHOKIDAR_USEPOLLING ?? (isMac ? 'true' : 'false'),
+    CHOKIDAR_INTERVAL: process.env.CHOKIDAR_INTERVAL ?? (isMac ? '250' : '100'),
   },
 });
 

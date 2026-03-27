@@ -8,9 +8,10 @@ use flate2::write::GzEncoder;
 use flate2::Compression;
 use hmac::{Hmac, Mac};
 use md5::{Digest, Md5};
+use num_bigint_dig::BigUint;
 use rand::rngs::OsRng;
+use rand::RngCore;
 use reqwest::{Client, Url};
-use rsa::{pkcs8::DecodePublicKey, RsaPublicKey};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use sha2::Sha256;
@@ -28,7 +29,14 @@ const SKLAND_ORGANIZATION: &str = "UWXspnCCJN4sfYlNfqps";
 const SKLAND_APP_ID: &str = "default";
 // 固定 UA：Wiki API 与数美 DID 请求必须使用同一值，禁止改为动态获取或其它 UA。
 const SKLAND_USER_AGENT: &str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36";
-const SKLAND_RSA_PUBLIC_KEY: &str = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCmxMNr7n8ZeT0tE1R9j/mPixoinPkeM+k4VGIn/s0k7N5rJAfnZ0eMER+QhwFvshzo0LNmeUkpR8uIlU/GEVr8mN28sKmwd2gpygqj0ePnBmOW4v0ZVwbSYK+izkhVFk2V/doLoMbWy6b+UnA8mkjvg0iYWRByfRsK2gdl7llqCwIDAQAB";
+const SKLAND_RSA_MODULUS_HEX: &str = concat!(
+    "a6c4c36bee7f19793d2d13547d8ff98f8b1a229cf91e33e938546227fecd24ec",
+    "de6b2407e767478c111f9087016fb21ce8d0b36679492947cb88954fc6115afc",
+    "98ddbcb0a9b0776829ca0aa3d1e3e7066396e2fd195706d260afa2ce4855164d",
+    "95fdda0ba0c6d6cba6fe52703c9a48ef8348985910727d1b0ada0765ee596a0b",
+);
+const SKLAND_RSA_PUBLIC_EXPONENT: u32 = 65_537;
+const SKLAND_RSA_MODULUS_LEN: usize = 128;
 const SKLAND_API_HOST: &str = "https://zonai.skland.com";
 
 #[cfg(target_os = "android")]
@@ -1086,6 +1094,62 @@ fn flatten_json_values(value: &Value, output: &mut String) {
     }
 }
 
+fn rsa_pkcs1v15_encrypt(
+    message: &[u8],
+    modulus: &BigUint,
+    exponent: &BigUint,
+    modulus_len: usize,
+    rng: &mut impl RngCore,
+) -> Result<Vec<u8>, String> {
+    const PKCS1V15_MIN_PADDING_LEN: usize = 8;
+
+    if message.len() > modulus_len.saturating_sub(PKCS1V15_MIN_PADDING_LEN + 3) {
+        return Err("message too long for RSA PKCS#1 v1.5 encryption".into());
+    }
+
+    let padding_len = modulus_len - message.len() - 3;
+    let mut encoded_message = Vec::with_capacity(modulus_len);
+
+    encoded_message.extend_from_slice(&[0x00, 0x02]);
+    for _ in 0..padding_len {
+        let mut byte = 0u8;
+        while byte == 0 {
+            let mut buffer = [0u8; 1];
+            rng.fill_bytes(&mut buffer);
+            byte = buffer[0];
+        }
+        encoded_message.push(byte);
+    }
+    encoded_message.push(0x00);
+    encoded_message.extend_from_slice(message);
+
+    let encrypted = BigUint::from_bytes_be(&encoded_message).modpow(exponent, modulus);
+    let mut ciphertext = encrypted.to_bytes_be();
+    if ciphertext.len() < modulus_len {
+        let mut prefixed = vec![0u8; modulus_len - ciphertext.len()];
+        prefixed.extend_from_slice(&ciphertext);
+        ciphertext = prefixed;
+    }
+
+    Ok(ciphertext)
+}
+
+fn encrypt_with_skland_public_key(message: &[u8]) -> Result<String, String> {
+    let modulus = BigUint::parse_bytes(SKLAND_RSA_MODULUS_HEX.as_bytes(), 16)
+        .ok_or_else(|| "failed to parse Skland RSA public key".to_string())?;
+    let exponent = BigUint::from(SKLAND_RSA_PUBLIC_EXPONENT);
+    let mut rng = OsRng;
+    let ciphertext = rsa_pkcs1v15_encrypt(
+        message,
+        &modulus,
+        &exponent,
+        SKLAND_RSA_MODULUS_LEN,
+        &mut rng,
+    )?;
+
+    Ok(BASE64_STANDARD.encode(ciphertext))
+}
+
 #[tauri::command]
 async fn generate_did(fingerprint: FingerprintData) -> Result<String, String> {
     log::info!("Starting DID generation (Protocol 102)...");
@@ -1099,18 +1163,7 @@ async fn generate_did(fingerprint: FingerprintData) -> Result<String, String> {
     };
     let pri_id = &pri_id_full[..16];
 
-    let rsa_public_key_der = BASE64_STANDARD
-        .decode(SKLAND_RSA_PUBLIC_KEY.replace("\n", ""))
-        .map_err(|e| e.to_string())?;
-    let public_key =
-        RsaPublicKey::from_public_key_der(&rsa_public_key_der).map_err(|e| e.to_string())?;
-
-    let padding = rsa::Pkcs1v15Encrypt;
-    let mut rng = OsRng;
-    let ep = public_key
-        .encrypt(&mut rng, padding, uuid.as_bytes())
-        .map_err(|e| e.to_string())
-        .map(|enc_data| BASE64_STANDARD.encode(enc_data))?;
+    let ep = encrypt_with_skland_public_key(uuid.as_bytes())?;
 
     // 1. 构建原始内层字段 (未混淆)
     let mut inner_data_fields: BTreeMap<String, Value> = BTreeMap::new();
@@ -1345,4 +1398,115 @@ fn schedule_dev_webview_recovery<R: tauri::Runtime>(app: &tauri::App<R>) {
 
     #[cfg(not(debug_assertions))]
     let _ = app;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use rand::Error;
+
+    const TEST_RSA_MODULUS_HEX: &str = concat!(
+        "c92119081f5d81e97893f0024d24bbbc4cbea2d6570992dd7b5250fa47adce54",
+        "6edbe72d2088d3ffd92dff70c8d6ac16d8b69f2ab76cbe326be173ce1d4a0bbf",
+    );
+    const TEST_RSA_PRIVATE_EXPONENT_HEX: &str = concat!(
+        "13992809449525fd8c044e54cb13933f8bf2df8727400591935cb80b4b44c260",
+        "078e504195116f39feedcfecb9c4c3732f0f17e311d4d901f8220b159fd5a901",
+    );
+    const TEST_RSA_MODULUS_LEN: usize = 64;
+
+    struct SequenceRng {
+        bytes: Vec<u8>,
+        index: usize,
+    }
+
+    impl SequenceRng {
+        fn new(bytes: Vec<u8>) -> Self {
+            Self { bytes, index: 0 }
+        }
+
+        fn next_byte(&mut self) -> u8 {
+            let byte = self.bytes[self.index % self.bytes.len()];
+            self.index += 1;
+            byte
+        }
+    }
+
+    impl RngCore for SequenceRng {
+        fn next_u32(&mut self) -> u32 {
+            let mut bytes = [0u8; 4];
+            self.fill_bytes(&mut bytes);
+            u32::from_le_bytes(bytes)
+        }
+
+        fn next_u64(&mut self) -> u64 {
+            let mut bytes = [0u8; 8];
+            self.fill_bytes(&mut bytes);
+            u64::from_le_bytes(bytes)
+        }
+
+        fn fill_bytes(&mut self, dest: &mut [u8]) {
+            for byte in dest {
+                *byte = self.next_byte();
+            }
+        }
+
+        fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), Error> {
+            self.fill_bytes(dest);
+            Ok(())
+        }
+    }
+
+    #[test]
+    fn rsa_pkcs1v15_encrypt_builds_a_valid_padded_block() {
+        let modulus = BigUint::parse_bytes(TEST_RSA_MODULUS_HEX.as_bytes(), 16).unwrap();
+        let public_exponent = BigUint::from(65_537_u32);
+        let private_exponent =
+            BigUint::parse_bytes(TEST_RSA_PRIVATE_EXPONENT_HEX.as_bytes(), 16).unwrap();
+        let message = b"did-check";
+        let mut rng = SequenceRng::new(vec![0, 0x11, 0, 0x22, 0x33, 0x44, 0x55]);
+
+        let ciphertext = rsa_pkcs1v15_encrypt(
+            message,
+            &modulus,
+            &public_exponent,
+            TEST_RSA_MODULUS_LEN,
+            &mut rng,
+        )
+        .unwrap();
+
+        assert_eq!(ciphertext.len(), TEST_RSA_MODULUS_LEN);
+
+        let decrypted = BigUint::from_bytes_be(&ciphertext).modpow(&private_exponent, &modulus);
+        let mut encoded_message = decrypted.to_bytes_be();
+        if encoded_message.len() < TEST_RSA_MODULUS_LEN {
+            let mut prefixed = vec![0u8; TEST_RSA_MODULUS_LEN - encoded_message.len()];
+            prefixed.extend_from_slice(&encoded_message);
+            encoded_message = prefixed;
+        }
+
+        assert_eq!(encoded_message[0], 0x00);
+        assert_eq!(encoded_message[1], 0x02);
+
+        let separator_index = encoded_message[2..]
+            .iter()
+            .position(|byte| *byte == 0)
+            .map(|index| index + 2)
+            .expect("PKCS#1 v1.5 block should contain a separator byte");
+
+        assert!(separator_index >= 10);
+        assert!(encoded_message[2..separator_index]
+            .iter()
+            .all(|byte| *byte != 0));
+        assert_eq!(&encoded_message[separator_index + 1..], message);
+    }
+
+    #[test]
+    fn encrypt_with_skland_public_key_returns_fixed_size_ciphertext() {
+        let ciphertext = BASE64_STANDARD
+            .decode(encrypt_with_skland_public_key(b"123e4567-e89b-12d3-a456-426614174000").unwrap())
+            .unwrap();
+
+        assert_eq!(ciphertext.len(), SKLAND_RSA_MODULUS_LEN);
+    }
 }

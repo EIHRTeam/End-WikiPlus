@@ -97,7 +97,31 @@ export default defineConfig((ctx) => {
       // polyfillModulePreload: true,
       // distDir
 
-      // extendViteConf (viteConf) {},
+      extendViteConf() {
+        if (ctx.dev !== true) {
+          return;
+        }
+
+        // Limit dev-time watchers to the frontend sources. This repo includes
+        // large Tauri/vendor/generated trees that do not participate in Quasar HMR.
+        return {
+          server: {
+            watch: {
+              ignored: [
+                '**/.git/**',
+                '**/.idea/**',
+                '**/.quasar/**',
+                '**/dist/**',
+                '**/docs/**',
+                '**/logo/**',
+                '**/src-tauri/**',
+                '**/README*.md',
+                '**/THIRD-PARTY_LICENSES.md',
+              ],
+            },
+          },
+        };
+      },
       // viteVuePluginOptions: {},
 
       vitePlugins: [
