@@ -39,25 +39,34 @@ English version: [README_en-US.md](README_en-US.md)
 
 ### 从源码构建
 
-1. 安装 Node.js 20 LTS 或更高版本：https://nodejs.org/en/download
+0. 安装特定平台所需依赖：
 
-2. 安装 pnpm：https://pnpm.io/zh/installation
+   | 平台 | 依赖项 | URL |
+   |----|----|----|
+   | **Windows** | Visual Studio 生成工具 | https://aka.ms/vs/stable/vs_BuildTools.exe |
+   | **macOS / iOS** | Xcode | https://developer.apple.com/cn/xcode/resources |
+   | **Android** | Android Studio 及 Android SDK (API Level 36+) & Android SDK Build-Tools & NDK & Gradle 9.4.1 | https://developer.android.com/studio |
+   | **Android** | JDK 21 | [Oracle](https://www.oracle.com/cn/java/technologies/downloads/#java21) 或 [JetBrains](https://github.com/JetBrains/JetBrainsRuntime) |
 
-3. 安装 Rust 工具链：https://rust-lang.org/tools/install/
+2. 安装 Node.js 20 LTS 或更高版本：https://nodejs.org/en/download
 
-4. 安装依赖
+3. 安装 pnpm：https://pnpm.io/zh/installation
+
+4. 安装 Rust 工具链：https://rust-lang.org/tools/install/
+
+5. 安装依赖
 
    ```bash
    pnpm install
    ```
 
-5. 启动开发版
+6. 启动开发版
 
    ```bash
    pnpm tauri dev
    ```
 
-6. 编译正式版
+7. 编译正式版
 
    ```bash
    pnpm tauri build
