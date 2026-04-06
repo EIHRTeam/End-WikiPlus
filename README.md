@@ -16,6 +16,7 @@
 ![Vue 3](https://img.shields.io/badge/Vue-3-%234FC08D?logo=vuedotjs)
 ![Tauri v2](https://img.shields.io/badge/Tauri-v2-%2324C8D8?logo=tauri)
 ![Quasar v2](https://img.shields.io/badge/Quasar-v2-%234695EB?logo=quasar)<br>
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/EIHRTeam/End-WikiPlus)<br>
 A cross-platform, open-source toolbox for the SKLAND/SKPORT Endfield Wiki<br>
 一款跨平台的开源森空岛 Wiki 工具箱
 
