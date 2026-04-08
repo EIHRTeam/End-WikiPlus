@@ -47,7 +47,7 @@ English version: [README_en-US.md](README_en-US.md)
    | **Windows** | Visual Studio 生成工具 | https://aka.ms/vs/stable/vs_BuildTools.exe |
    | **macOS / iOS** | Xcode | https://developer.apple.com/cn/xcode/resources |
    | **Android** | Android Studio 及 Android SDK (API Level 36+) & Android SDK Build-Tools & NDK & Gradle 9.4.1 | https://developer.android.com/studio |
-   | **Android** | JDK 21 | [Oracle](https://www.oracle.com/cn/java/technologies/downloads/#java21) 或 [JetBrains](https://github.com/JetBrains/JetBrainsRuntime) |
+   | **Android** | JDK 21 | - |
 
 2. 安装 Node.js 20 LTS 或更高版本：https://nodejs.org/en/download
 
