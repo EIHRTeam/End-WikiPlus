@@ -103,6 +103,8 @@ English version: [README_en-US.md](README_en-US.md)
 
 本软件不会向除鹰角网络外的任何个人或组织收集并上传用户的任何信息。
 
+本软件上传至鹰角网络服务器的用户信息适用[《森空岛个人信息保护政策》](https://assets.skland.com/protocols/privacy.html)与[《森空岛使用许可及服务协议》](https://assets.skland.com/protocols/agreement.html)。
+
 该免责声明及本软件之用户协议及隐私政策适用且仅适用于本软件之开发者在**该 GitHub 仓库的 Release 页面** (https://github.com/EIHRTeam/End-WikiPlus/releases) 提供的版本，本软件之开发者不对从他处获取的本软件做任何担保。
 
 ## License / 授权
