@@ -18,7 +18,7 @@
 A cross-platform, open-source toolbox for the SKLAND/SKPORT Endfield Wiki<br>
 一款跨平台的开源森空岛 Wiki 工具箱
 
-English version: [README_en-US.md](README_en-US.md)
+简体中文版: [README.md](README.md)
 
 </div>
 
