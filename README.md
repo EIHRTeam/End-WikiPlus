@@ -6,8 +6,6 @@
 
 # Endfield Wikiplus
 
-<!-- markdownlint-restore -->
-
 <!-- version-badge:start -->
 ![Version](https://img.shields.io/badge/version-0.2.3--alpha-blue?style=for-the-badge)<br><!-- version-badge:end -->
 ![GitHub Repo stars](https://img.shields.io/github/stars/EIHRTeam/End-WikiPlus)
@@ -24,11 +22,7 @@ English version: [README_en-US.md](README_en-US.md)
 
 </div>
 
-## 项目结构说明
-
-- 仓库结构与移动端源码归属见 [docs/project-structure.md](docs/project-structure.md)
-- Android 维护项目说明见 [src-tauri/gen/android/README.md](src-tauri/gen/android/README.md)
-- Vendored 依赖说明见 [src-tauri/vendor/README.md](src-tauri/vendor/README.md)
+<!-- markdownlint-restore -->
 
 ## 快速开始
 
@@ -37,6 +31,12 @@ English version: [README_en-US.md](README_en-US.md)
 请至 [Release](https://github.com/EIHRTeam/End-WikiPlus/releases/latest) 页面下载该程序。
 
 该项目支持平台：Windows、Linux、macOS、Android、iOS。
+
+### 项目结构说明
+
+- 仓库结构与移动端源码归属见 [docs/project-structure.md](docs/project-structure.md)
+- Android 维护项目说明见 [src-tauri/gen/android/README.md](src-tauri/gen/android/README.md)
+- Vendored 依赖说明见 [src-tauri/vendor/README.md](src-tauri/vendor/README.md)
 
 ### 从源码构建
 
@@ -81,12 +81,29 @@ English version: [README_en-US.md](README_en-US.md)
 
 ## 鸣谢
 
-- [AndreaFrederica](https://github.com/AndreaFrederica) 及 [TheJeiWebProject](https://github.com/TheJEIWebProject)
-- [梦溪潇](https://github.com/mengxixiao)
+（排名不分先后）
+- [AndreaFrederica](https://github.com/AndreaFrederica) - JEI-Web
+- [梦溪潇](https://github.com/mengxixiao) - 早期 iOS / macOS 适配与 API 支持
+- [终末地Delta机器人](https://www.skland.com/profile?id=7532688806929) - 森空岛终末地 Wiki / 鹰角网络
+- 森空岛终末地 Wiki 全体编者
 
 ## 技术栈
 
-Tauri、Vue 3、TypeScript
+框架：Tauri v2
+
+前端：Vue 3 & TypeScript
+
+后端：Rust / Kotlin / Swift
+
+## 免责声明
+
+本软件为开源免费、非营利性质的同人作品，本软件及其开发者与**上海市鹰角网络科技有限公司及其关联实体**（下称“鹰角网络”）没有任何资金或组织上的联系。
+
+本软件内所提供的全部 Wiki 内容均来自[森空岛终末地 Wiki](https://wiki.skland.com/endfield)，所有内容均按原样提供，本软件不会对其进行任何修改，亦不对其负任何责任。
+
+本软件不会向除鹰角网络外的任何个人或组织收集并上传用户的任何信息。
+
+该免责声明及本软件之用户协议及隐私政策适用且仅适用于本软件之开发者在**该 GitHub 仓库的 Release 页面** (https://github.com/EIHRTeam/End-WikiPlus/releases) 提供的版本，本软件之开发者不对从他处获取的本软件做任何担保。
 
 ## License / 授权
 
