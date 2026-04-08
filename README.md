@@ -73,6 +73,18 @@ English version: [README_en-US.md](README_en-US.md)
    pnpm tauri build
    ```
 
+## 技术栈
+
+框架：Tauri v2
+
+前端：Vue 3 & TypeScript
+
+后端：Rust / Kotlin / Swift
+
+## 开发计划
+
+[Milestone: Coming S∞n™](https://github.com/EIHRTeam/End-WikiPlus/milestone/2)
+
 ## 贡献者
 
 <a href="https://github.com/EIHRTeam/End-WikiPlus/graphs/contributors">
@@ -87,27 +99,25 @@ English version: [README_en-US.md](README_en-US.md)
 - [终末地Delta机器人](https://www.skland.com/profile?id=7532688806929) - 森空岛终末地 Wiki / 鹰角网络
 - 森空岛终末地 Wiki 全体编者
 
-## 技术栈
+## 法律信息
 
-框架：Tauri v2
+### 免责声明
 
-前端：Vue 3 & TypeScript
+本软件系依据 Apache License 2.0 协议开源发布的免费、非官方同人软件。本软件及其开发者与**上海市鹰角网络科技有限公司及其关联实体**（以下统称“鹰角网络”）不存在任何资金或组织上的关系；本软件亦不代表鹰角网络的立场或行为。
 
-后端：Rust / Kotlin / Swift
+本软件内提供的全部 Wiki 内容均来源于[森空岛终末地 Wiki](https://wiki.skland.com/endfield)，并按原始状态提供。本软件及其开发者不对相关内容的真实性、准确性、完整性、合法性、时效性或由此产生的后果承担责任。
 
-## 免责声明
+除实现本软件功能所必需外，本软件不会向鹰角网络以外的任何个人、组织或第三方收集、传输或上传用户信息。
 
-本软件为开源免费、非营利性质的同人作品，本软件及其开发者与**上海市鹰角网络科技有限公司及其关联实体**（下称“鹰角网络”）没有任何资金或组织上的联系。
+用户通过本软件上传至鹰角网络服务器的信息，适用[《森空岛个人信息保护政策》](https://assets.skland.com/protocols/privacy.html)及[《森空岛使用许可及服务协议》](https://assets.skland.com/protocols/agreement.html)；用户在登录“鹰角通行证”账号时上传至鹰角网络服务器的信息，适用[《个人信息保护政策》](https://user.hypergryph.com/protocol/privacy)、[《用户注册协议》](https://user.hypergryph.com/protocol/registration)与[《儿童个人信息保护政策》](https://user.hypergryph.com/protocol/children_privacy)。为实现特定功能，本软件可能要求用户登录“鹰角通行证”账号；在该等情况下，本软件仅会在必要范围内向鹰角网络服务器发送相关账号信息，并采用通行的加密方式在用户设备本地存储相关信息。
 
-本软件内所提供的全部 Wiki 内容均来自[森空岛终末地 Wiki](https://wiki.skland.com/endfield)，所有内容均按原样提供，本软件不会对其进行任何修改，亦不对其负任何责任。
+本软件按“现状”提供。除法律法规另有强制性规定外，本软件及其开发者不作任何明示或默示保证。
 
-本软件不会向除鹰角网络外的任何个人或组织收集并上传用户的任何信息。
+本免责声明及本软件的用户协议、隐私政策等说明，仅适用于本软件开发者在该 GitHub 仓库的 Release 页面提供的二进制软件包：https://github.com/EIHRTeam/End-WikiPlus/releases
 
-本软件上传至鹰角网络服务器的用户信息适用[《森空岛个人信息保护政策》](https://assets.skland.com/protocols/privacy.html)与[《森空岛使用许可及服务协议》](https://assets.skland.com/protocols/agreement.html)。
+对于自其他渠道获取的本软件副本、修改版本、再分发版本或衍生版本，本软件开发者不作任何保证，亦不承担任何责任。
 
-该免责声明及本软件之用户协议及隐私政策适用且仅适用于本软件之开发者在**该 GitHub 仓库的 Release 页面** (https://github.com/EIHRTeam/End-WikiPlus/releases) 提供的版本，本软件之开发者不对从他处获取的本软件做任何担保。
-
-## License / 授权
+### License / 授权
 
 Copyright © 2026 Endfield Industries Human Resources Team. All rights reserved.
 
