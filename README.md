@@ -25,7 +25,7 @@ English version: [README_en-US.md](README_en-US.md)
 <!-- markdownlint-restore -->
 
 > [!NOTE]
-> 森空岛终末地 Wiki 已于 2026 年 5 月 14 日上线移动版，鉴于此，本项目开发将暂缓进行，期限不定。请访问 [wiki.skland.com](httos://wiki.skland.com/endfield)，或查看[更新公告](https://www.skland.com/article?id=5853075)了解更多信息。
+> 森空岛终末地 Wiki 已于 2026 年 5 月 14 日上线移动版，鉴于此，本项目开发将暂缓进行，期限不定。请访问 [wiki.skland.com](https://wiki.skland.com/endfield)，或查看[更新公告](https://www.skland.com/article?id=5853075)了解更多信息。
 
 ## 快速开始
 
