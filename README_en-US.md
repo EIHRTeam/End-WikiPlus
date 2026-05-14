@@ -24,6 +24,9 @@ A cross-platform, open-source toolbox for the SKLAND/SKPORT Endfield Wiki<br>
 
 <!-- markdownlint-restore -->
 
+> [!NOTE]
+> The Skland Endfield Wiki of launched its mobile version on May 14, 2026. In light of this, development on this project will be temporarily paused for an indefinite period. Please visit [wiki.skland.com](https://wiki.skland.com/endfield) or see the [update announcement](https://www.skland.com/article?id=5853075) for more information.
+
 ## Quick Start
 
 ### Download and Usage
